@@ -644,13 +644,16 @@ components:
           type: string
         functionTag:
           type: string
-          enum: [SUPPLY_CHAIN, IT_TECHNOLOGY, SALES_DISTRIBUTION, FINANCIAL, CATEGORY]
+          enum: [SUPPLY_CHAIN, IT_TECHNOLOGY, SALES_DISTRIBUTION, FINANCIAL, CATEGORY, PROCUREMENT]
         geographyTag:
           type: string
           enum: [INDIA, GLOBAL, BOTH]
         urgency:
           type: string
           enum: [IMMEDIATE, MEDIUM_TERM, STRUCTURAL]
+        status:
+          type: string
+          enum: [ACTIVE, MONITORING, CONFIRMED, CLOSED]
         signal:
           type: string
         hypothesis:
@@ -667,6 +670,12 @@ components:
           type: string
         povParagraph:
           type: string
+        financialImpact:
+          type: string
+        whyNow:
+          type: string
+        relatedCompanies:
+          type: string
         version:
           type: string
         nextReview:
@@ -675,7 +684,7 @@ components:
           type: string
         updatedAt:
           type: string
-      required: [id, cardId, title, functionTag, geographyTag, urgency, signal, hypothesis, evidence, clientImplication, thoucentriqAngle, version, createdAt, updatedAt]
+      required: [id, cardId, title, functionTag, geographyTag, urgency, status, signal, hypothesis, evidence, clientImplication, thoucentriqAngle, version, createdAt, updatedAt]
 
     CreateSheiCardBody:
       type: object
@@ -686,13 +695,16 @@ components:
           type: string
         functionTag:
           type: string
-          enum: [SUPPLY_CHAIN, IT_TECHNOLOGY, SALES_DISTRIBUTION, FINANCIAL, CATEGORY]
+          enum: [SUPPLY_CHAIN, IT_TECHNOLOGY, SALES_DISTRIBUTION, FINANCIAL, CATEGORY, PROCUREMENT]
         geographyTag:
           type: string
           enum: [INDIA, GLOBAL, BOTH]
         urgency:
           type: string
           enum: [IMMEDIATE, MEDIUM_TERM, STRUCTURAL]
+        status:
+          type: string
+          enum: [ACTIVE, MONITORING, CONFIRMED, CLOSED]
         signal:
           type: string
         hypothesis:
@@ -708,6 +720,12 @@ components:
         provocQuestion:
           type: string
         povParagraph:
+          type: string
+        financialImpact:
+          type: string
+        whyNow:
+          type: string
+        relatedCompanies:
           type: string
         version:
           type: string
@@ -726,7 +744,7 @@ components:
           type: string
         category:
           type: string
-          enum: [EARNINGS, STRATEGY, SUPPLY_CHAIN, TECHNOLOGY, LEADERSHIP, REGULATORY, DISRUPTION, MACRO]
+          enum: [EARNINGS, STRATEGY, SUPPLY_CHAIN, TECHNOLOGY, LEADERSHIP, REGULATORY, DISRUPTION, MACRO, PROCUREMENT]
         summary:
           type: string
         strength:
@@ -736,6 +754,19 @@ components:
           type: string
           enum: [UPDATE_CARD, SHEI_CANDIDATE, DISRUPTION_BRIEF, MONITOR, NO_ACTION]
         source:
+          type: string
+        eventType:
+          type: string
+          enum: [EARNINGS_RESULT, ANALYST_DAY, REGULATORY, NEWS, INDUSTRY_REPORT, COMPANY_FILING, LEADERSHIP_CHANGE, M_AND_A, MACRO_EVENT]
+        financialImpact:
+          type: string
+        publishedDate:
+          type: string
+        newsUrl:
+          type: string
+        quarter:
+          type: string
+        scRelevance:
           type: string
         createdAt:
           type: string
@@ -780,9 +811,21 @@ components:
           type: string
         laggard:
           type: string
+        unit:
+          type: string
+        sourcePeriod:
+          type: string
         indiaContext:
           type: string
         sheiAnnotation:
+          type: string
+        companyExamples:
+          type: string
+        whyItMatters:
+          type: string
+        consultingAngle:
+          type: string
+        improvementLevers:
           type: string
         version:
           type: string
@@ -807,9 +850,21 @@ components:
           type: string
         laggard:
           type: string
+        unit:
+          type: string
+        sourcePeriod:
+          type: string
         indiaContext:
           type: string
         sheiAnnotation:
+          type: string
+        companyExamples:
+          type: string
+        whyItMatters:
+          type: string
+        consultingAngle:
+          type: string
+        improvementLevers:
           type: string
         version:
           type: string

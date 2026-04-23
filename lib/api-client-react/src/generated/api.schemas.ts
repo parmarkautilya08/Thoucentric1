@@ -120,6 +120,7 @@ export const SheiCardFunctionTag = {
   SALES_DISTRIBUTION: "SALES_DISTRIBUTION",
   FINANCIAL: "FINANCIAL",
   CATEGORY: "CATEGORY",
+  PROCUREMENT: "PROCUREMENT",
 } as const;
 
 export type SheiCardGeographyTag =
@@ -140,6 +141,16 @@ export const SheiCardUrgency = {
   STRUCTURAL: "STRUCTURAL",
 } as const;
 
+export type SheiCardStatus =
+  (typeof SheiCardStatus)[keyof typeof SheiCardStatus];
+
+export const SheiCardStatus = {
+  ACTIVE: "ACTIVE",
+  MONITORING: "MONITORING",
+  CONFIRMED: "CONFIRMED",
+  CLOSED: "CLOSED",
+} as const;
+
 export interface SheiCard {
   id: number;
   cardId: string;
@@ -147,6 +158,7 @@ export interface SheiCard {
   functionTag: SheiCardFunctionTag;
   geographyTag: SheiCardGeographyTag;
   urgency: SheiCardUrgency;
+  status: SheiCardStatus;
   signal: string;
   hypothesis: string;
   evidence: string;
@@ -155,6 +167,9 @@ export interface SheiCard {
   pitchAnchor?: string;
   provocQuestion?: string;
   povParagraph?: string;
+  financialImpact?: string;
+  whyNow?: string;
+  relatedCompanies?: string;
   version: string;
   nextReview?: string;
   createdAt: string;
@@ -170,6 +185,7 @@ export const CreateSheiCardBodyFunctionTag = {
   SALES_DISTRIBUTION: "SALES_DISTRIBUTION",
   FINANCIAL: "FINANCIAL",
   CATEGORY: "CATEGORY",
+  PROCUREMENT: "PROCUREMENT",
 } as const;
 
 export type CreateSheiCardBodyGeographyTag =
@@ -190,12 +206,23 @@ export const CreateSheiCardBodyUrgency = {
   STRUCTURAL: "STRUCTURAL",
 } as const;
 
+export type CreateSheiCardBodyStatus =
+  (typeof CreateSheiCardBodyStatus)[keyof typeof CreateSheiCardBodyStatus];
+
+export const CreateSheiCardBodyStatus = {
+  ACTIVE: "ACTIVE",
+  MONITORING: "MONITORING",
+  CONFIRMED: "CONFIRMED",
+  CLOSED: "CLOSED",
+} as const;
+
 export interface CreateSheiCardBody {
   cardId: string;
   title: string;
   functionTag: CreateSheiCardBodyFunctionTag;
   geographyTag: CreateSheiCardBodyGeographyTag;
   urgency: CreateSheiCardBodyUrgency;
+  status?: CreateSheiCardBodyStatus;
   signal: string;
   hypothesis: string;
   evidence: string;
@@ -204,6 +231,9 @@ export interface CreateSheiCardBody {
   pitchAnchor?: string;
   provocQuestion?: string;
   povParagraph?: string;
+  financialImpact?: string;
+  whyNow?: string;
+  relatedCompanies?: string;
   version?: string;
   nextReview?: string;
 }
@@ -220,6 +250,7 @@ export const SignalCategory = {
   REGULATORY: "REGULATORY",
   DISRUPTION: "DISRUPTION",
   MACRO: "MACRO",
+  PROCUREMENT: "PROCUREMENT",
 } as const;
 
 export type SignalStrength =
@@ -241,6 +272,21 @@ export const SignalAction = {
   NO_ACTION: "NO_ACTION",
 } as const;
 
+export type SignalEventType =
+  (typeof SignalEventType)[keyof typeof SignalEventType];
+
+export const SignalEventType = {
+  EARNINGS_RESULT: "EARNINGS_RESULT",
+  ANALYST_DAY: "ANALYST_DAY",
+  REGULATORY: "REGULATORY",
+  NEWS: "NEWS",
+  INDUSTRY_REPORT: "INDUSTRY_REPORT",
+  COMPANY_FILING: "COMPANY_FILING",
+  LEADERSHIP_CHANGE: "LEADERSHIP_CHANGE",
+  M_AND_A: "M_AND_A",
+  MACRO_EVENT: "MACRO_EVENT",
+} as const;
+
 export interface Signal {
   id: number;
   companyId?: number;
@@ -250,6 +296,12 @@ export interface Signal {
   strength: SignalStrength;
   action: SignalAction;
   source?: string;
+  eventType?: SignalEventType;
+  financialImpact?: string;
+  publishedDate?: string;
+  newsUrl?: string;
+  quarter?: string;
+  scRelevance?: string;
   createdAt: string;
 }
 
@@ -305,8 +357,14 @@ export interface Benchmark {
   bestInClass: string;
   industryMedian: string;
   laggard: string;
+  unit?: string;
+  sourcePeriod?: string;
   indiaContext?: string;
   sheiAnnotation?: string;
+  companyExamples?: string;
+  whyItMatters?: string;
+  consultingAngle?: string;
+  improvementLevers?: string;
   version: string;
   createdAt: string;
   updatedAt: string;
@@ -319,8 +377,14 @@ export interface CreateBenchmarkBody {
   bestInClass: string;
   industryMedian: string;
   laggard: string;
+  unit?: string;
+  sourcePeriod?: string;
   indiaContext?: string;
   sheiAnnotation?: string;
+  companyExamples?: string;
+  whyItMatters?: string;
+  consultingAngle?: string;
+  improvementLevers?: string;
   version?: string;
 }
 

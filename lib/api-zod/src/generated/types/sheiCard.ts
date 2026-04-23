@@ -7,6 +7,7 @@
  */
 import type { SheiCardFunctionTag } from "./sheiCardFunctionTag";
 import type { SheiCardGeographyTag } from "./sheiCardGeographyTag";
+import type { SheiCardStatus } from "./sheiCardStatus";
 import type { SheiCardUrgency } from "./sheiCardUrgency";
 
 export interface SheiCard {
@@ -16,6 +17,7 @@ export interface SheiCard {
   functionTag: SheiCardFunctionTag;
   geographyTag: SheiCardGeographyTag;
   urgency: SheiCardUrgency;
+  status: SheiCardStatus;
   signal: string;
   hypothesis: string;
   evidence: string;
@@ -24,6 +26,9 @@ export interface SheiCard {
   pitchAnchor?: string;
   provocQuestion?: string;
   povParagraph?: string;
+  financialImpact?: string;
+  whyNow?: string;
+  relatedCompanies?: string;
   version: string;
   nextReview?: string;
   createdAt: string;

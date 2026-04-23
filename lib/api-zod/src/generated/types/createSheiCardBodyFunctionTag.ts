@@ -15,4 +15,5 @@ export const CreateSheiCardBodyFunctionTag = {
   SALES_DISTRIBUTION: "SALES_DISTRIBUTION",
   FINANCIAL: "FINANCIAL",
   CATEGORY: "CATEGORY",
+  PROCUREMENT: "PROCUREMENT",
 } as const;

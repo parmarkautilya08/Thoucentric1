@@ -34,18 +34,25 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 
 ## Database Schema
 
-Five tables: `companies`, `shei_cards`, `signals`, `benchmarks`, `playbooks`
+Five tables: `companies`, `shei_cards`, `signals`, `benchmarks`, `playbook_sections`
 
-Seed data: 8 FMCG companies (HUL, Unilever, P&G, Nestlé, ITC, Dabur, Marico, Godrej CP), 3 SHEI cards, 10 signals, 11 benchmarks, 5 playbook sections.
+**Seed data (force-reseeds on startup):**
+- 15 FMCG companies: HUL, ITC, Nestlé India, Dabur, Marico, Godrej CP, Britannia, Emami, Tata Consumer, Colgate India, Reckitt India, Mondelez India + global: Unilever, P&G, Nestlé Global
+- 5 SHEI cards with financialImpact, whyNow, relatedCompanies, pitchAnchor, provocQuestion
+- 15 KPI benchmarks across 6 functions with unit, companyExamples, whyItMatters, consultingAngle, improvementLevers
+- 15 signals with eventType, financialImpact, scRelevance, quarter, publishedDate, companyName
+- 5 playbooks (SC Planning, Procurement, RTM, Sustainability, Manufacturing)
+
+**Admin endpoint:** `POST /api/admin/reseed` — force re-seeds all data
 
 ## Pages
 
 - `/` — Dashboard with real-time stats, recent signals, active hypotheses
-- `/companies` — Company grid with search/filter; `/companies/:id` detail
-- `/shei-cards` — SHEI hypothesis cards with status/urgency filters; `/shei-cards/:id` detail
-- `/signals` — Signal tracker with strength/source filters
-- `/benchmarks` — KPI benchmarks grouped by category with min/median/max
-- `/playbooks` — Accordion playbook sections with questions, data points, red flags
+- `/companies` — 15-company grid with search/filter; `/companies/:id` detail
+- `/shei-cards` — SHEI hypothesis cards with financial impact + why now panels; `/shei-cards/:id` full detail with pitch anchor, provoking question
+- `/signals` — Signal tracker with strength/category/event type filters; financial impact + SC relevance per signal
+- `/benchmarks` — KPI benchmarks grouped by function (15 KPIs); clickable drill-down modal with company examples, why-it-matters, consulting entry points
+- `/playbooks` — Playbook sections with industry landscape, failure modes, tech enablers
 
 ## Key Commands
 

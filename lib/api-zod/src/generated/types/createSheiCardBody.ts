@@ -7,6 +7,7 @@
  */
 import type { CreateSheiCardBodyFunctionTag } from "./createSheiCardBodyFunctionTag";
 import type { CreateSheiCardBodyGeographyTag } from "./createSheiCardBodyGeographyTag";
+import type { CreateSheiCardBodyStatus } from "./createSheiCardBodyStatus";
 import type { CreateSheiCardBodyUrgency } from "./createSheiCardBodyUrgency";
 
 export interface CreateSheiCardBody {
@@ -15,6 +16,7 @@ export interface CreateSheiCardBody {
   functionTag: CreateSheiCardBodyFunctionTag;
   geographyTag: CreateSheiCardBodyGeographyTag;
   urgency: CreateSheiCardBodyUrgency;
+  status?: CreateSheiCardBodyStatus;
   signal: string;
   hypothesis: string;
   evidence: string;
@@ -23,6 +25,9 @@ export interface CreateSheiCardBody {
   pitchAnchor?: string;
   provocQuestion?: string;
   povParagraph?: string;
+  financialImpact?: string;
+  whyNow?: string;
+  relatedCompanies?: string;
   version?: string;
   nextReview?: string;
 }

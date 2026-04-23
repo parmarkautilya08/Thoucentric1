@@ -7,6 +7,7 @@
  */
 import type { SignalAction } from "./signalAction";
 import type { SignalCategory } from "./signalCategory";
+import type { SignalEventType } from "./signalEventType";
 import type { SignalStrength } from "./signalStrength";
 
 export interface Signal {
@@ -18,5 +19,11 @@ export interface Signal {
   strength: SignalStrength;
   action: SignalAction;
   source?: string;
+  eventType?: SignalEventType;
+  financialImpact?: string;
+  publishedDate?: string;
+  newsUrl?: string;
+  quarter?: string;
+  scRelevance?: string;
   createdAt: string;
 }

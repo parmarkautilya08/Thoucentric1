@@ -6,6 +6,7 @@ import signalsRouter from "./signals";
 import benchmarksRouter from "./benchmarks";
 import playbooksRouter from "./playbooks";
 import dashboardRouter from "./dashboard";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(signalsRouter);
 router.use(benchmarksRouter);
 router.use(playbooksRouter);
 router.use(dashboardRouter);
+router.use(adminRouter);
 
 export default router;

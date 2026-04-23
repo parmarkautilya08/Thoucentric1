@@ -18,4 +18,5 @@ export const SignalCategory = {
   REGULATORY: "REGULATORY",
   DISRUPTION: "DISRUPTION",
   MACRO: "MACRO",
+  PROCUREMENT: "PROCUREMENT",
 } as const;

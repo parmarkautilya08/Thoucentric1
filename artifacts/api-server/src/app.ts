@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
 
-seedDatabase().catch((err) => {
+seedDatabase(true).catch((err) => {
   logger.error({ err }, "Failed to seed database");
 });
 

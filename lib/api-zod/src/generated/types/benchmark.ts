@@ -14,8 +14,14 @@ export interface Benchmark {
   bestInClass: string;
   industryMedian: string;
   laggard: string;
+  unit?: string;
+  sourcePeriod?: string;
   indiaContext?: string;
   sheiAnnotation?: string;
+  companyExamples?: string;
+  whyItMatters?: string;
+  consultingAngle?: string;
+  improvementLevers?: string;
   version: string;
   createdAt: string;
   updatedAt: string;

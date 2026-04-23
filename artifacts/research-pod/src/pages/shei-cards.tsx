@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Layers, ChevronRight, AlertTriangle, TrendingUp, FileSearch } from "lucide-react";
+import { Layers, ChevronRight, TrendingUp, DollarSign, Clock } from "lucide-react";
 
-const statusColor = (status?: string) => {
+const statusColor = (status?: string | null) => {
   switch (status) {
     case "CONFIRMED": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
     case "ACTIVE": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
@@ -17,13 +17,22 @@ const statusColor = (status?: string) => {
   }
 };
 
-const urgencyColor = (urgency?: string) => {
+const urgencyColor = (urgency?: string | null) => {
   switch (urgency) {
     case "IMMEDIATE": return "bg-red-500/20 text-red-400 border-red-500/30";
-    case "SHORT_TERM": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
-    case "LONG_TERM": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    case "MEDIUM_TERM": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+    case "STRUCTURAL": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
     default: return "";
   }
+};
+
+const functionLabels: Record<string, string> = {
+  SUPPLY_CHAIN: "Supply Chain",
+  IT_TECHNOLOGY: "Technology",
+  SALES_DISTRIBUTION: "Sales & Distribution",
+  FINANCIAL: "Financial",
+  CATEGORY: "Category",
+  PROCUREMENT: "Procurement",
 };
 
 const FRAMEWORK_LABELS: Record<string, string> = {
@@ -36,13 +45,15 @@ const FRAMEWORK_LABELS: Record<string, string> = {
 export default function SheiCards() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [urgencyFilter, setUrgencyFilter] = useState("all");
+  const [functionFilter, setFunctionFilter] = useState("all");
 
   const { data: cards, isLoading } = useListSheiCards();
 
   const filtered = (cards ?? []).filter((c) => {
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     const matchUrgency = urgencyFilter === "all" || c.urgency === urgencyFilter;
-    return matchStatus && matchUrgency;
+    const matchFunc = functionFilter === "all" || c.functionTag === functionFilter;
+    return matchStatus && matchUrgency && matchFunc;
   });
 
   return (
@@ -50,13 +61,13 @@ export default function SheiCards() {
       <div>
         <h1 className="text-3xl font-bold font-mono tracking-tight">SHEI Hypothesis Cards</h1>
         <p className="text-muted-foreground mt-1">
-          Signal → Hypothesis → Evidence → Implication framework · {filtered.length} cards
+          Signal → Hypothesis → Evidence → Implication · Supply chain & procurement intelligence · {filtered.length} cards
         </p>
       </div>
 
       <div className="flex gap-3 flex-wrap">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40 bg-card border-border">
+          <SelectTrigger className="w-36 bg-card border-border">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -68,23 +79,32 @@ export default function SheiCards() {
           </SelectContent>
         </Select>
         <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-          <SelectTrigger className="w-44 bg-card border-border">
+          <SelectTrigger className="w-40 bg-card border-border">
             <SelectValue placeholder="Urgency" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Urgency</SelectItem>
             <SelectItem value="IMMEDIATE">Immediate</SelectItem>
-            <SelectItem value="SHORT_TERM">Short Term</SelectItem>
-            <SelectItem value="LONG_TERM">Long Term</SelectItem>
+            <SelectItem value="MEDIUM_TERM">Medium Term</SelectItem>
+            <SelectItem value="STRUCTURAL">Structural</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={functionFilter} onValueChange={setFunctionFilter}>
+          <SelectTrigger className="w-44 bg-card border-border">
+            <SelectValue placeholder="Function" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Functions</SelectItem>
+            {Object.entries(functionLabels).map(([k, v]) => (
+              <SelectItem key={k} value={k}>{v}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
       {isLoading ? (
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-48 rounded-xl" />
-          ))}
+          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-56 rounded-xl" />)}
         </div>
       ) : (
         <div className="space-y-4">
@@ -94,28 +114,32 @@ export default function SheiCards() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                         <span className="text-xs font-mono text-muted-foreground">
-                          #{String(card.id).padStart(3, "0")} · {card.category}
+                          {card.cardId}
                         </span>
+                        <Badge variant="outline" className="text-xs">
+                          {functionLabels[card.functionTag] || card.functionTag}
+                        </Badge>
+                        <Badge variant="outline" className={`text-xs ${statusColor(card.status)}`}>{card.status}</Badge>
+                        {card.urgency && (
+                          <Badge variant="outline" className={`text-xs ${urgencyColor(card.urgency)}`}>
+                            {card.urgency?.replace(/_/g, " ")}
+                          </Badge>
+                        )}
                       </div>
                       <CardTitle className="text-base font-semibold leading-snug group-hover:text-primary transition-colors">
                         {card.title}
                       </CardTitle>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant="outline" className={`text-xs ${statusColor(card.status)}`}>{card.status}</Badge>
-                      {card.urgency && (
-                        <Badge variant="outline" className={`text-xs ${urgencyColor(card.urgency)}`}>{card.urgency?.replace("_", " ")}</Badge>
-                      )}
-                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-1" />
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <CardContent className="space-y-3">
+                  {/* SHEI mini-panels */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {(["S", "H", "E", "I"] as const).map((key) => {
-                      const value = key === "S" ? card.signal : key === "H" ? card.hypothesis : key === "E" ? card.evidence : card.implication;
+                      const value = key === "S" ? card.signal : key === "H" ? card.hypothesis : key === "E" ? card.evidence : card.clientImplication;
                       return (
                         <div key={key} className="bg-muted/30 rounded-md p-2.5 border border-border/50">
                           <div className="text-xs font-mono text-primary mb-1">{key} — {FRAMEWORK_LABELS[key]}</div>
@@ -124,10 +148,27 @@ export default function SheiCards() {
                       );
                     })}
                   </div>
-                  {card.consultingAction && (
-                    <div className="flex items-start gap-2 mt-3 pt-3 border-t border-border">
+
+                  {/* Financial Impact + Why Now */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {card.financialImpact && (
+                      <div className="flex items-start gap-2 bg-emerald-500/5 border border-emerald-500/20 rounded px-3 py-2">
+                        <DollarSign className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <p className="text-xs text-emerald-300 line-clamp-2">{card.financialImpact}</p>
+                      </div>
+                    )}
+                    {card.whyNow && (
+                      <div className="flex items-start gap-2 bg-amber-500/5 border border-amber-500/20 rounded px-3 py-2">
+                        <Clock className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />
+                        <p className="text-xs text-amber-300 line-clamp-2">{card.whyNow}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {card.thoucentriqAngle && (
+                    <div className="flex items-start gap-2 pt-1 border-t border-border">
                       <TrendingUp className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">{card.consultingAction}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{card.thoucentriqAngle}</p>
                     </div>
                   )}
                 </CardContent>

@@ -11,6 +11,12 @@ export const signalsTable = pgTable("signals", {
   strength: text("strength").notNull().default("MEDIUM"),
   action: text("action").notNull().default("MONITOR"),
   source: text("source"),
+  eventType: text("event_type"),
+  financialImpact: text("financial_impact"),
+  publishedDate: text("published_date"),
+  newsUrl: text("news_url"),
+  quarter: text("quarter"),
+  scRelevance: text("sc_relevance"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
