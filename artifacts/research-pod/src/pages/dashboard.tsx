@@ -41,7 +41,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-300">
       <div>
-        <h1 className="text-3xl font-bold font-mono tracking-tight">At a Glance</h1>
+        <h1 className="text-3xl font-bold font-mono tracking-tight">Command Centre</h1>
         <p className="text-muted-foreground mt-2">Real-time overview of tracked intelligence · FMCG India</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
