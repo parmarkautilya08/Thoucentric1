@@ -13,6 +13,9 @@ import SheiCardDetail from "@/pages/shei-card-detail";
 import Signals from "@/pages/signals";
 import Benchmarks from "@/pages/benchmarks";
 import Playbooks from "@/pages/playbooks";
+import Actions from "@/pages/actions";
+import Ask from "@/pages/ask";
+import Timeline from "@/pages/timeline";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,8 +36,11 @@ function Router() {
         <Route path="/shei-cards" component={SheiCards} />
         <Route path="/shei-cards/:id" component={SheiCardDetail} />
         <Route path="/signals" component={Signals} />
+        <Route path="/timeline" component={Timeline} />
         <Route path="/benchmarks" component={Benchmarks} />
         <Route path="/playbooks" component={Playbooks} />
+        <Route path="/actions" component={Actions} />
+        <Route path="/ask" component={Ask} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

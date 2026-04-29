@@ -7,6 +7,7 @@ import benchmarksRouter from "./benchmarks";
 import playbooksRouter from "./playbooks";
 import dashboardRouter from "./dashboard";
 import adminRouter from "./admin";
+import askRouter from "./ask";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(benchmarksRouter);
 router.use(playbooksRouter);
 router.use(dashboardRouter);
 router.use(adminRouter);
+router.use(askRouter);
 
 export default router;
