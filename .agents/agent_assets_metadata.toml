@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "ot9JSsKpKNpdoAcnAnaBY"
+uri = "file://master-prompt-thoucentric.docx"
+type = "word_document"
+title = "Industry Research Pod — Master Build Prompt"
