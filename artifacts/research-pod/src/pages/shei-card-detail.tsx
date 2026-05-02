@@ -3,7 +3,10 @@ import { useGetSheiCard } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, TrendingUp, Clock, DollarSign, Building2, MessageSquare, HelpCircle, Calendar, FileText } from "lucide-react";
+import {
+  ArrowLeft, TrendingUp, Clock, DollarSign, Building2, MessageSquare,
+  HelpCircle, Calendar, AlertTriangle, BarChart2, Layers, GitBranch
+} from "lucide-react";
 
 const functionLabels: Record<string, string> = {
   SUPPLY_CHAIN: "Supply Chain",
@@ -41,6 +44,8 @@ export default function SheiCardDetail() {
   );
 
   const relatedCompanies = card.relatedCompanies?.split(",").map((c) => c.trim()).filter(Boolean) ?? [];
+  const kpiLinks = card.kpiLinkage?.split(";").map((k) => k.trim()).filter(Boolean) ?? [];
+  const signalItems = card.signalCluster?.split(";").map((s) => s.trim()).filter(Boolean) ?? [];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl">
@@ -102,10 +107,24 @@ export default function SheiCardDetail() {
         )}
       </div>
 
+      {/* Trajectory Context */}
+      {card.trajectoryContext && (
+        <Card className="bg-sky-500/5 border-sky-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2 text-sky-400">
+              <GitBranch className="h-4 w-4" /> Trajectory · Past → Current → Direction → Inflection
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{card.trajectoryContext}</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* SHEI Framework */}
       <div className="space-y-4">
         {FRAMEWORK.map(({ key, label, title, color, border, bg }) => {
-          const value = (card as any)[key];
+          const value = (card as Record<string, unknown>)[key];
           return (
             <Card key={key} className={`border border-border border-l-4 ${border} ${bg}`}>
               <CardHeader className="pb-2">
@@ -115,12 +134,65 @@ export default function SheiCardDetail() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{value || "—"}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{String(value ?? "—")}</p>
               </CardContent>
             </Card>
           );
         })}
       </div>
+
+      {/* Contradictions */}
+      {card.contradictions && (
+        <Card className="bg-red-500/5 border-red-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-4 w-4" /> Contradictions & Data Mismatches
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">{card.contradictions}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* KPI Linkage */}
+      {kpiLinks.length > 0 && (
+        <Card className="bg-violet-500/5 border-violet-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2 text-violet-400">
+              <BarChart2 className="h-4 w-4" /> KPI Linkage
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1.5">
+              {kpiLinks.map((k, i) => (
+                <div key={i} className="flex items-start gap-2 text-sm">
+                  <span className="text-violet-400 shrink-0 font-mono">•</span>
+                  <span className="leading-snug">{k}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Signal Cluster */}
+      {signalItems.length > 0 && (
+        <Card className="bg-muted/20 border-border">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
+              <Layers className="h-4 w-4" /> Signal Cluster
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {signalItems.map((s, i) => (
+                <Badge key={i} variant="outline" className="text-xs">{s}</Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Consulting/Sales Panels */}
       <div className="space-y-4">

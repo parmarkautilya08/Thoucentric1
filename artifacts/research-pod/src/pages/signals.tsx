@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Activity, Calendar, Building2, Tag, TrendingUp, DollarSign, ExternalLink, Zap } from "lucide-react";
+import { Activity, Calendar, Building2, Tag, TrendingUp, TrendingDown, Minus, DollarSign, Zap, ArrowUpRight, ArrowDownRight, ArrowRight } from "lucide-react";
 
 const strengthColor = (s?: string) => {
   switch (s) {
@@ -23,29 +23,68 @@ const categoryColor = (c?: string) => {
     case "TECHNOLOGY": return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
     case "REGULATORY": return "bg-red-500/20 text-red-400 border-red-500/30";
     case "DISRUPTION": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+    case "DISTRIBUTION_GTM": return "bg-violet-500/20 text-violet-400 border-violet-500/30";
     case "MACRO": return "bg-green-500/20 text-green-400 border-green-500/30";
     case "STRATEGY": return "bg-indigo-500/20 text-indigo-400 border-indigo-500/30";
     default: return "";
   }
 };
 
+const scopeColor = (s?: string | null) => {
+  switch (s) {
+    case "COMPANY_SPECIFIC": return "bg-sky-500/15 text-sky-400 border-sky-500/30";
+    case "INDUSTRY_WIDE": return "bg-violet-500/15 text-violet-400 border-violet-500/30";
+    case "MACRO": return "bg-orange-500/15 text-orange-400 border-orange-500/30";
+    default: return "bg-muted text-muted-foreground";
+  }
+};
+
+const scopeLabel = (s?: string | null) => {
+  switch (s) {
+    case "COMPANY_SPECIFIC": return "Company";
+    case "INDUSTRY_WIDE": return "Industry";
+    case "MACRO": return "Macro";
+    default: return s ?? "—";
+  }
+};
+
+const trajectoryIcon = (t?: string | null) => {
+  switch (t) {
+    case "IMPROVING": return <ArrowUpRight className="h-3 w-3 text-emerald-400" />;
+    case "DETERIORATING": return <ArrowDownRight className="h-3 w-3 text-red-400" />;
+    case "STABLE": return <ArrowRight className="h-3 w-3 text-amber-400" />;
+    default: return null;
+  }
+};
+
+const trajectoryColor = (t?: string | null) => {
+  switch (t) {
+    case "IMPROVING": return "text-emerald-400";
+    case "DETERIORATING": return "text-red-400";
+    case "STABLE": return "text-amber-400";
+    default: return "text-muted-foreground";
+  }
+};
+
 const eventTypeIcon: Record<string, string> = {
   EARNINGS_RESULT: "📊",
+  EARNINGS_SIGNAL: "📊",
   ANALYST_DAY: "🎯",
   REGULATORY: "⚖️",
+  REGULATION: "⚖️",
   NEWS: "📰",
   INDUSTRY_REPORT: "📋",
   COMPANY_FILING: "📁",
   LEADERSHIP_CHANGE: "👤",
   M_AND_A: "🤝",
   MACRO_EVENT: "🌐",
+  DISRUPTION: "⚡",
 };
 
 const actionColor = (a?: string) => {
   switch (a) {
-    case "SHEI_CANDIDATE": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
-    case "UPDATE_CARD": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-    case "DISRUPTION_BRIEF": return "bg-red-500/20 text-red-400 border-red-500/30";
+    case "ACT_NOW": return "bg-red-500/20 text-red-400 border-red-500/30";
+    case "INVESTIGATE": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
     case "MONITOR": return "bg-muted text-muted-foreground";
     default: return "";
   }
@@ -54,18 +93,18 @@ const actionColor = (a?: string) => {
 export default function Signals() {
   const [strengthFilter, setStrengthFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [eventFilter, setEventFilter] = useState("all");
+  const [scopeFilter, setScopeFilter] = useState("all");
+  const [actionFilter, setActionFilter] = useState("all");
 
   const { data: signals, isLoading } = useListSignals();
 
   const filtered = (signals ?? []).filter((s) => {
     const matchStrength = strengthFilter === "all" || s.strength === strengthFilter;
     const matchCat = categoryFilter === "all" || s.category === categoryFilter;
-    const matchEvent = eventFilter === "all" || s.eventType === eventFilter;
-    return matchStrength && matchCat && matchEvent;
+    const matchScope = scopeFilter === "all" || s.scope === scopeFilter;
+    const matchAction = actionFilter === "all" || s.action === actionFilter;
+    return matchStrength && matchCat && matchScope && matchAction;
   });
-
-  const eventTypes = [...new Set((signals ?? []).map((s) => s.eventType).filter(Boolean))];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -77,6 +116,17 @@ export default function Signals() {
       </div>
 
       <div className="flex gap-3 flex-wrap">
+        <Select value={actionFilter} onValueChange={setActionFilter}>
+          <SelectTrigger className="w-36 bg-card border-border">
+            <SelectValue placeholder="Action" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Actions</SelectItem>
+            <SelectItem value="ACT_NOW">ACT NOW</SelectItem>
+            <SelectItem value="INVESTIGATE">Investigate</SelectItem>
+            <SelectItem value="MONITOR">Monitor</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={strengthFilter} onValueChange={setStrengthFilter}>
           <SelectTrigger className="w-36 bg-card border-border">
             <SelectValue placeholder="Strength" />
@@ -94,32 +144,31 @@ export default function Signals() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="EARNINGS">Earnings</SelectItem>
             <SelectItem value="PROCUREMENT">Procurement</SelectItem>
             <SelectItem value="SUPPLY_CHAIN">Supply Chain</SelectItem>
+            <SelectItem value="DISTRIBUTION_GTM">Distribution / GTM</SelectItem>
             <SelectItem value="TECHNOLOGY">Technology</SelectItem>
             <SelectItem value="REGULATORY">Regulatory</SelectItem>
             <SelectItem value="DISRUPTION">Disruption</SelectItem>
             <SelectItem value="MACRO">Macro</SelectItem>
-            <SelectItem value="STRATEGY">Strategy</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={eventFilter} onValueChange={setEventFilter}>
+        <Select value={scopeFilter} onValueChange={setScopeFilter}>
           <SelectTrigger className="w-44 bg-card border-border">
-            <SelectValue placeholder="Event Type" />
+            <SelectValue placeholder="Scope" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Events</SelectItem>
-            {eventTypes.map((e) => (
-              <SelectItem key={e} value={e!}>{eventTypeIcon[e!]} {e!.replace(/_/g, " ")}</SelectItem>
-            ))}
+            <SelectItem value="all">All Scopes</SelectItem>
+            <SelectItem value="COMPANY_SPECIFIC">Company Specific</SelectItem>
+            <SelectItem value="INDUSTRY_WIDE">Industry Wide</SelectItem>
+            <SelectItem value="MACRO">Macro</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {isLoading ? (
         <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-36 rounded-xl" />)}
+          {[1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
         </div>
       ) : (
         <div className="space-y-3">
@@ -133,17 +182,22 @@ export default function Signals() {
                       <Badge variant="outline" className={`text-xs shrink-0 ${strengthColor(signal.strength)}`}>
                         {signal.strength}
                       </Badge>
+                      {signal.action && (
+                        <Badge variant="outline" className={`text-xs shrink-0 font-semibold ${actionColor(signal.action)}`}>
+                          <Zap className="h-2.5 w-2.5 mr-1" />{signal.action.replace(/_/g, " ")}
+                        </Badge>
+                      )}
                       <Badge variant="outline" className={`text-xs shrink-0 ${categoryColor(signal.category)}`}>
                         <Tag className="h-2.5 w-2.5 mr-1" />{signal.category?.replace(/_/g, " ")}
                       </Badge>
-                      {signal.eventType && (
-                        <Badge variant="outline" className="text-xs shrink-0">
-                          {eventTypeIcon[signal.eventType]} {signal.eventType.replace(/_/g, " ")}
+                      {signal.scope && (
+                        <Badge variant="outline" className={`text-xs shrink-0 ${scopeColor(signal.scope)}`}>
+                          {scopeLabel(signal.scope)}
                         </Badge>
                       )}
-                      {signal.action && signal.action !== "MONITOR" && (
-                        <Badge variant="outline" className={`text-xs shrink-0 ${actionColor(signal.action)}`}>
-                          <Zap className="h-2.5 w-2.5 mr-1" />{signal.action.replace(/_/g, " ")}
+                      {signal.eventType && (
+                        <Badge variant="outline" className="text-xs shrink-0 text-muted-foreground">
+                          {eventTypeIcon[signal.eventType] ?? "📌"} {signal.eventType.replace(/_/g, " ")}
                         </Badge>
                       )}
                     </div>
@@ -164,7 +218,24 @@ export default function Signals() {
                   </div>
 
                   {/* Summary */}
-                  <p className="text-sm leading-relaxed">{signal.summary}</p>
+                  <p className="text-sm leading-relaxed font-medium">{signal.summary}</p>
+
+                  {/* Trajectory block */}
+                  {(signal.pastState || signal.trajectoryDir) && (
+                    <div className="flex items-start gap-2 bg-muted/20 border border-border/40 rounded px-3 py-2 text-xs">
+                      <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                        {signal.trajectoryDir && trajectoryIcon(signal.trajectoryDir)}
+                        <span className={`font-mono font-semibold ${trajectoryColor(signal.trajectoryDir)}`}>
+                          {signal.trajectoryDir ?? "TRAJECTORY"}
+                        </span>
+                      </div>
+                      {signal.pastState && (
+                        <p className="text-muted-foreground leading-snug">
+                          <span className="text-muted-foreground/60">Past: </span>{signal.pastState}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* Financial Impact */}
                   {signal.financialImpact && (
