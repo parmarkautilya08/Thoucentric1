@@ -7,6 +7,7 @@ export const signalsTable = pgTable("signals", {
   companyId: integer("company_id"),
   companyName: text("company_name"),
   category: text("category").notNull(),
+  scope: text("scope"),            // COMPANY_SPECIFIC | INDUSTRY_WIDE | MACRO
   summary: text("summary").notNull(),
   strength: text("strength").notNull().default("MEDIUM"),
   action: text("action").notNull().default("MONITOR"),
@@ -17,6 +18,8 @@ export const signalsTable = pgTable("signals", {
   newsUrl: text("news_url"),
   quarter: text("quarter"),
   scRelevance: text("sc_relevance"),
+  pastState: text("past_state"),       // What was true 6-12 months ago
+  trajectoryDir: text("trajectory_dir"), // IMPROVING | DETERIORATING | STABLE
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

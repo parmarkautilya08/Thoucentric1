@@ -12,8 +12,12 @@ export const sheiCardsTable = pgTable("shei_cards", {
   signal: text("signal").notNull(),
   hypothesis: text("hypothesis").notNull(),
   evidence: text("evidence").notNull(),
+  contradictions: text("contradictions"),   // Data contradictions calling out mismatches
   clientImplication: text("client_implication").notNull(),
   thoucentriqAngle: text("thoucentriq_angle").notNull(),
+  kpiLinkage: text("kpi_linkage"),          // Which KPIs this SHEI affects
+  signalCluster: text("signal_cluster"),    // Which signals triggered this SHEI
+  trajectoryContext: text("trajectory_context"), // Past → current → direction → inflection
   pitchAnchor: text("pitch_anchor"),
   provocQuestion: text("provoc_question"),
   povParagraph: text("pov_paragraph"),

@@ -971,6 +971,9 @@ export async function seedDatabase(force = false) {
       companyName: "Mondelez India",
       financialImpact: "Cocoa ICE futures: $9,200/ton (May 2025) vs. $2,600 (Jan 2024). Mondelez FY25 gross margin: 36.8% vs. 40.1% FY23—330bps cumulative compression. India EBIT impact: ₹180–260 Cr annually at sustained $9,000+ cocoa. Barry Callebaut disclosed forward order books at 60% capacity due to farmer replanting lag—structural tightness through 2026.",
       scRelevance: "Cocoa procurement strategy: spot exposure vs. 18-24 month forward contracts. Ghana/Ivory Coast alternative crop risk still elevated. Confectionery SKU recipe reformulation (cocoa content reduction) in progress at Mondelez, Mars, Nestlé globally.",
+      scope: "MACRO",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Cocoa at $2,600/ton (Jan 2024). Mondelez gross margin 40.1% FY23—procurement at normalised commodity pricing with 60-70% forward contract coverage. Barry Callebaut order books at 90% capacity.",
     },
     {
       summary: "Quick Commerce India Crosses ₹5,000 Cr GMV: FMCG SC Architecture Redesign Now Unavoidable",

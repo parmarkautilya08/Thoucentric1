@@ -13,6 +13,7 @@ export const benchmarksTable = pgTable("benchmarks", {
   unit: text("unit"),
   sourcePeriod: text("source_period"),
   indiaContext: text("india_context"),
+  calculationLogic: text("calculation_logic"), // How to actually compute this KPI
   sheiAnnotation: text("shei_annotation"),
   companyExamples: text("company_examples"),
   whyItMatters: text("why_it_matters"),

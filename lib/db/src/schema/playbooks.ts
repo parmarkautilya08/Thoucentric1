@@ -13,6 +13,7 @@ export const playbookSectionsTable = pgTable("playbook_sections", {
   whatGoodLooksLike: text("what_good_looks_like"),
   technologyEnablers: text("technology_enablers"),
   consultingEntryPoints: text("consulting_entry_points"),
+  triggerSignals: text("trigger_signals"),  // Which signal types activate this playbook
   status: text("status").notNull().default("STARTER"),
   version: text("version").notNull().default("1.0"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
