@@ -987,6 +987,9 @@ export async function seedDatabase(force = false) {
       companyName: "All FMCG",
       financialImpact: "Q-commerce crossed ₹5,000 Cr GMV (FY25)—now 4-5% of India organised FMCG, growing 55%+ YoY. Blinkit: 1,000+ dark stores across 40 cities. HUL q-comm revenue: ₹2,800+ Cr (FY25), now 17% of India business. FMCG companies without dedicated q-comm SC architecture face 8-12% revenue share loss risk in metro premium categories by FY27.",
       scRelevance: "Dark store pre-positioning requires channel-specific safety stock policies. Demand sensing: q-comm order velocity 6-8x faster than GT. Separate allocation planning needed for q-comm vs. MT vs. GT to avoid cross-channel cannibalisation.",
+      scope: "INDUSTRY_WIDE",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Q-commerce was <1% of India FMCG in FY22. Most FMCG companies treated it as a margin-accretive tail channel with no dedicated SC investment. GT models dominated 80%+ of channel planning bandwidth.",
     },
     {
       summary: "HUL Q4 FY25: Revenue Growth 7% but Volume Under Pressure — SC Efficiency Focus Accelerated",
@@ -1000,6 +1003,9 @@ export async function seedDatabase(force = false) {
       companyName: "HUL",
       financialImpact: "HUL Q4 FY25: Revenue ₹15,600 Cr (+7% YoY), Volume +1.5%—below analyst estimates. EBITDA margin: 23.8%, flat YoY. Quick-commerce now 17% of India revenue. Management flagged ₹400+ Cr working capital tied in inventory buffer due to q-comm forecast inaccuracies. FY26 SC modernisation programme: ₹800 Cr capex planned.",
       scRelevance: "S&OP redesign for multi-speed channels is HUL's stated FY26 priority. Demand sensing investment approved but implementation partner selection in progress. SC modernisation budget creates consulting entry point for demand planning transformation.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "STABLE",
+      pastState: "HUL FY23: Volume growth 5-7%. EBITDA margin 24.5%. Q-commerce ~8% of revenue. S&OP model built for monthly GT replenishment cycles with single-speed planning cadence.",
     },
     {
       summary: "Marico Q4 FY25: Parachute Volume Recovery but Inventory Normalisation Still Incomplete",
@@ -1013,6 +1019,9 @@ export async function seedDatabase(force = false) {
       companyName: "Marico",
       financialImpact: "Marico Q4 FY25: Consolidated revenue ₹2,780 Cr (+8% YoY). Parachute volume: +4% (recovery from FY24 over-forecasting). Inventory days: normalised from 61 to 54 days (vs. 48-day target). Coconut oil COGS pressure continues: copra prices ₹135/kg (May 2025) vs. ₹98/kg average FY23. EBITDA margin: 19.4% vs. 20.1% FY24.",
       scRelevance: "Demand forecasting recalibration in progress—Marico deploying channel-specific models for rural vs. urban. D2C brands (True Elements, Beardo) still on separate SC infrastructure. Integration planning is the next programme.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Marico FY24: Parachute over-forecast drove inventory days to 61 (vs. 48 target). EBITDA margin 20.1%. Copra at ₹98/kg average. Single unified SC model across rural and urban channels.",
     },
     {
       summary: "India Pet Food Market ₹5,200 Cr: Mars Rolls Out Royal Canin Vet-Clinic SC Network",
@@ -1026,6 +1035,9 @@ export async function seedDatabase(force = false) {
       companyName: "Mars India",
       financialImpact: "India pet food market: ₹5,200 Cr (FY25), growing 32% YoY. Mars Pedigree + Whiskas: ~₹1,600 Cr, Royal Canin premium at ₹280 Cr growing 45%+. Category headroom: ₹30,000 Cr by FY30. Vet-clinic SC channel requires cold chain for wet food segments—₹150+ Cr investment for Mars India over 2 years.",
       scRelevance: "Tri-channel SC architecture: vet-clinic (cold chain + relationship sales), MT (planogram + chilled shelf), e-commerce (DTC + quick-commerce). Unprecedented in India FMCG—no existing distributor model handles all three. New channel SC design is a greenfield opportunity.",
+      scope: "INDUSTRY_WIDE",
+      trajectoryDir: "IMPROVING",
+      pastState: "India pet food was ₹2,500 Cr in FY22, dominated by dry kibble with ambient-temperature SC. Vet-clinic channel was negligible. Mars operated single MT+GT distribution model.",
     },
     {
       summary: "Ekaterra / Lipton: SAP Go-Live Delayed — TSA Extension Negotiated to Q3 FY26",
@@ -1039,6 +1051,9 @@ export async function seedDatabase(force = false) {
       companyName: "Ekaterra / Lipton",
       financialImpact: "SAP S/4HANA go-live delayed 6 months (originally Q4 FY25, now Q3 FY26). TSA extension cost: €50–80M for additional 6-month period vs. standalone operation. Total post-carve-out SC transformation cost now estimated €180–220M vs. original €120M budget. CVC Capital exit timeline pushed by 12-18 months due to EBITDA drag from elevated TSA costs.",
       scRelevance: "Blending operations at Lipton UK and Rotterdam still on Unilever SAP—cannot run independent procurement analytics or demand planning. Procurement contract novation 40% complete. Distribution platform (Unilever logistics in 12 markets) still on TSA.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Ekaterra carved out of Unilever in late 2021 (CVC Capital acquisition). Original TSA plan assumed 24-month systems independence by end-2023. SAP S/4HANA project started Q1 2023 with €120M budget and Q4 FY25 go-live target.",
     },
     {
       summary: "Kenya 2025 Tea Crop: Production Recovery to 65% of Normal — Mombasa Auction Prices Still Elevated",
@@ -1052,6 +1067,9 @@ export async function seedDatabase(force = false) {
       companyName: "Ekaterra / Lipton",
       financialImpact: "Kenya 2025 crop: estimated 380M kg vs. 520M kg normal (73% of historical). Mombasa auction: ₹430/kg average (May 2025) vs. ₹310/kg pre-2024 floods. For a global blender sourcing 35% from Kenya at 38% volume shortfall: €80–120M procurement cost premium in FY26. Rwanda and Vietnam qualifying as partial substitutes—6-9 month certification lead time.",
       scRelevance: "Tea origin diversification: Rwanda CTC (qualification in progress), Vietnam orthodox (taste profile mismatch for Western blends), Argentina CTC (certified, but logistics cost premium). Blending recipe reformulation to reduce Kenya dependency from 35% to 20% requires 12-18 months.",
+      scope: "MACRO",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Kenya tea production 2022: 540M kg—near historical peak. Mombasa auction ₹285/kg. Global blenders held 30-40% Kenya origin dependency with moderate forward contract cover. Climate risk was modelled as episodic, not structural.",
     },
     {
       summary: "Darjeeling First Flush 2025: Yield -25% Again — Climate Structural Risk Now Confirmed",
@@ -1065,6 +1083,9 @@ export async function seedDatabase(force = false) {
       companyName: "Goodricke Group",
       financialImpact: "Darjeeling first flush 2025: ~4.5M kg vs. 6M kg historical (25% below). Two consecutive years of yield deficit confirms structural climate risk, not cyclical. Goodricke Q4 FY25 estate revenue: -18% YoY. Premium first flush: ₹1,400–2,800/kg—prices up 20% YoY due to scarcity. Twinings, Ekaterra Lipton Premium, Tetley Darjeeling all flagged sourcing pressure.",
       scRelevance: "GI tea scarcity: certification for replacement origins (organic Nilgiris, Nepal orthodox) is 18-month process. Blenders must either reformulate recipes or accept premium cost pass-through. Climate-adjusted procurement planning models needed for estate-grade tea.",
+      scope: "MACRO",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Darjeeling first flush FY22-23: 6M kg average. Goodricke estate revenue stable. Premium first flush ₹1,100–1,600/kg. Climate risk treated as annual variability, not permanent structural shift.",
     },
     {
       summary: "Wagh Bakri Q4 FY25: Assam CTC Costs Stay Elevated — National Expansion Capex Announced",
@@ -1078,6 +1099,9 @@ export async function seedDatabase(force = false) {
       companyName: "Wagh Bakri",
       financialImpact: "Assam CTC auction average: ₹248/kg (April 2025) vs. ₹186/kg FY23 (+33%). Wagh Bakri COGS impact: ₹100–130 Cr annually at current auction prices. Revenue est. ₹3,100 Cr (FY25), growing 11% YoY. National expansion capex ₹200 Cr announced (FY26): North India distribution depots, Bangalore blending facility for South India entry.",
       scRelevance: "Wagh Bakri distribution gap: 28% outlet coverage in North India vs. 72% in Gujarat/Maharashtra. South India entry requires new blending facility (Assam CTC blend not suited to South India taste—lighter liquoring required). National expansion SC design is a 12-18 month consulting engagement.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Wagh Bakri FY23: Revenue ₹2,800 Cr. Assam CTC at ₹186/kg. Distribution limited to Gujarat/Maharashtra stronghold (~72% coverage). No capex programme for national expansion announced.",
     },
     {
       summary: "Tata Consumer Q4 FY25: Tetley ERP Integration Complete in India — International Still Lagging",
@@ -1091,6 +1115,9 @@ export async function seedDatabase(force = false) {
       companyName: "Tata Consumer",
       financialImpact: "Tata Consumer FY25: Revenue ₹17,100 Cr (+15% YoY). India tea business EBITDA: 15.8%—improving. Tetley UK SAP integration complete Q4 FY25. Eight O'Clock Coffee (US) still on legacy system. Unrealised tea sourcing synergies: £12–18M (procurement aggregation across origins). CFO target: ₹300 Cr cost efficiency programme FY26 with SC integration as primary lever.",
       scRelevance: "Three-entity integration (Tata Tea India + Tetley UK + Eight O'Clock US) now in final phase. Procurement aggregation across origins is the primary unrealised synergy. Cross-origin blending optimisation programme planned for FY26.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Tata Consumer FY23: Three separate ERP systems post-Tetley and Eight O'Clock acquisitions. India and UK operating independently without procurement aggregation. Sourcing synergies unrealised—estimated £20-25M gap vs. integrated procurement potential.",
     },
     {
       summary: "Amul FY25: Ice Cream Hits ₹5,200 Cr — Cold Chain Constraint Now Blocking Tier 2 Growth",
@@ -1104,6 +1131,9 @@ export async function seedDatabase(force = false) {
       companyName: "Amul",
       financialImpact: "Amul ice cream FY25: ₹5,200 Cr (vs. ₹4,500 Cr FY24, +16%). FY27 target: ₹8,000 Cr requires 53% growth in 2 years. Cold chain gap estimate updated: ₹700–900 Cr investment needed for deep-freeze last-mile in 200+ Tier 2-3 cities. Unmet demand in non-metro cities: ₹2,200–2,800 Cr annually. Amul approved ₹350 Cr cold chain capex for FY26.",
       scRelevance: "Milk procurement cold chain (village-level, 4°C) is not interchangeable with frozen distribution (-18°C). Amul's existing distribution network requires a parallel cold chain investment. Distributor freezer-at-retail placement: ₹4,000–6,000/outlet for freezer lease subsidy at scale.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Amul ice cream FY22: ₹3,200 Cr. Cold chain infrastructure limited to Tier 1 cities. No dedicated frozen distribution fleet. Relied on Amul dairy cold chain (4°C) repurposed for ice cream with high spoilage rates in non-metro routes.",
     },
     {
       summary: "India EPR Enforcement Escalates: 147 FMCG Companies Issued Show-Cause Notices in Q4 FY25",
@@ -1117,6 +1147,9 @@ export async function seedDatabase(force = false) {
       companyName: "HUL",
       financialImpact: "CPCB issued 147 FMCG company show-cause notices in Q4 FY25 for EPR non-compliance. EPR levies now escalated: ₹50–100/kg for repeat violators (up from ₹20–50/kg). HUL EPR liability at 60% compliance: ₹220–280 Cr annually. Industry-wide escalated levy potential: ₹4,000–5,000 Cr for top-100 FMCG. Recyclable packaging cost premium: 15–25% over current multilayer packaging.",
       scRelevance: "EPR compliance requires: SKU-level packaging material database (most companies lack this), reverse logistics SC for packaging collection from trade, supplier qualification for recyclable alternatives. 12–18 month implementation programme from baseline to compliance.",
+      scope: "INDUSTRY_WIDE",
+      trajectoryDir: "DETERIORATING",
+      pastState: "EPR Rules notified 2016, enforcement minimal through FY23. FMCG industry treated compliance as low-priority voluntary target. CPCB notices were rare—fewer than 20 in FY22-23. Most companies had zero EPR infrastructure.",
     },
     {
       summary: "Bikaji Foods Q4 FY25: Distribution Breakthrough — 3.1M Outlets Covered, South India Momentum",
@@ -1130,6 +1163,9 @@ export async function seedDatabase(force = false) {
       companyName: "Bikaji Foods",
       financialImpact: "Bikaji Q4 FY25: Revenue ₹850 Cr (+22% YoY)—distribution expansion paying off. Outlet coverage: 3.1M (vs. 2.2M prior year, +41%). South India: now 12% of revenue (vs. 6% FY24). FY26 guidance: ₹3,800 Cr revenue (+20%+), outlet target 4.5M. Cold chain frozen snack category (samosas, kachoris) launched in 8 cities—₹60 Cr revenue pilot.",
       scRelevance: "National distribution scale-up continues: DMS deployed in 78% of distributor network (FY25). Frozen snack cold chain is new capability—distributor cold room investment, van refrigeration, retailer freezer subsidy. Cold chain SC design for snacks is a nascent programme.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Bikaji FY23: Revenue ₹2,400 Cr. 2.2M outlet coverage, Rajasthan-heavy (55%+ revenue from home state). South India <4% of revenue. DMS deployed in <40% of distributors. Ambient snack-only SC.",
     },
     {
       summary: "Honasa / Mamaearth Q4 FY25: 1.05M Offline Outlets — Margin Recovery Signals SC Maturation",
@@ -1143,6 +1179,9 @@ export async function seedDatabase(force = false) {
       companyName: "Honasa / Mamaearth",
       financialImpact: "Honasa Q4 FY25: Revenue ₹580 Cr (+28% YoY). Offline: 1.05M outlets (target achieved). Offline share: 48% of revenue. EBITDA margin: 8.2% (recovering from 6.8% trough). Distributor productivity improving—secondary sales visibility now 85% coverage via DMS. FY26 target: 1.4M outlets, margin >10%.",
       scRelevance: "D2C-to-omnichannel transition entering maturation phase. SC learnings: distributor return rate reduced from 12% to 6.5% via improved demand planning. Quick-commerce now 18% of revenue—separate dark store pre-positioning team established. Mamaearth is now a reference case for D2C SC transformation.",
+      scope: "COMPANY_SPECIFIC",
+      trajectoryDir: "IMPROVING",
+      pastState: "Honasa FY23 (pre-IPO): 100% D2C/e-commerce, zero offline GT infrastructure. No distributor network. EBITDA margin 3-4%. Revenue ₹370 Cr. Offline SC capability did not exist.",
     },
     {
       summary: "Unilever Ice Cream Separation: Standalone Entity (The Ice Cream Company) Operational from Q1 FY26",
@@ -1156,6 +1195,9 @@ export async function seedDatabase(force = false) {
       companyName: "Unilever",
       financialImpact: "The Ice Cream Company (Magnum, Walls, Ben & Jerry's) separated April 2025. Revenue: €7.9B FY24. One-time separation cost: €580M (slightly above €500-700M guidance). Standalone cold chain SC investment: €180M incremental vs. Unilever shared infrastructure. TSA with Unilever: 18 months for logistics in 12 emerging markets. India cold chain: Kwality Walls distribution retransferred to new standalone entity.",
       scRelevance: "Largest FMCG carve-out SC exercise of 2025. Ice Cream Company needs standalone: dedicated cold chain fleet, freezer-at-retail programme, demand planning platform independent of Unilever. India cold chain SC is most complex transition market. Consulting engagement potential: €40-60M for full SC transformation support.",
+      scope: "INDUSTRY_WIDE",
+      trajectoryDir: "DETERIORATING",
+      pastState: "Unilever Ice Cream operated as integrated business unit using Unilever shared SC infrastructure (cold chain fleet, logistics, ERP, demand planning) for 30+ years. Pre-separation: zero standalone SC cost. India Kwality Walls on Unilever GT distribution network.",
     },
   ]);
 
