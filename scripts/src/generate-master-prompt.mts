@@ -89,14 +89,24 @@ function rule(text: string, color = RED): Paragraph {
   });
 }
 
+const CALLOUT_BG: Record<string, string> = {
+  [PURPLE]: "ede9fe",
+  [GREEN]:  "dcfce7",
+  [AMBER]:  "fef9c3",
+  [RED]:    "fee2e2",
+  [BLUE]:   "dbeafe",
+  [DARK]:   "f3f4f6",
+};
+
 function callout(label: string, text: string, color = PURPLE): Paragraph[] {
+  const bg = CALLOUT_BG[color] ?? "f3f0ff";
   return [
     new Paragraph({
       children: [
         new TextRun({ text: `  ${label}  `, bold: true, size: 20, color: "ffffff" }),
         new TextRun({ text: `  ${text}`, size: 21, color: DARK }),
       ],
-      shading: { type: ShadingType.SOLID, color: color + "18", fill: color + "18" },
+      shading: { type: ShadingType.SOLID, color: bg, fill: bg },
       border: { left: { style: BorderStyle.THICK, size: 10, color } },
       spacing: { before: 80, after: 80 },
       indent: { left: 120 },
@@ -117,10 +127,11 @@ function divider(): Paragraph {
 }
 
 function agentBox(icon: string, name: string, role: string, color: string, items: string[]): Paragraph[] {
+  const bg = CALLOUT_BG[color] ?? "f3f0ff";
   return [
     new Paragraph({
       children: [new TextRun({ text: `${icon}  ${name}`, bold: true, size: 26, color })],
-      shading: { type: ShadingType.SOLID, color: color + "15", fill: color + "15" },
+      shading: { type: ShadingType.SOLID, color: bg, fill: bg },
       border: {
         top: { style: BorderStyle.SINGLE, size: 6, color },
         bottom: { style: BorderStyle.SINGLE, size: 2, color: "e2e0f0" },

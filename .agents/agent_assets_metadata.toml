@@ -6,3 +6,9 @@ id = "ot9JSsKpKNpdoAcnAnaBY"
 uri = "file://master-prompt-thoucentric.docx"
 type = "word_document"
 title = "Industry Research Pod — Master Build Prompt"
+
+[[outputs]]
+id = "7qja_LYsnJEkM3F2Ev2jO"
+uri = "file://master-prompt-thoucentric-v3.docx"
+type = "word_document"
+title = "Industry Research Pod — Unbeatable Master Prompt v3.0"
