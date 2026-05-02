@@ -156,6 +156,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      docx:
+        specifier: ^9.6.1
+        version: 9.6.1
     devDependencies:
       prettier:
         specifier: ^3.8.1
