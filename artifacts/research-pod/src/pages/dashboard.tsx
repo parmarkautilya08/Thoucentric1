@@ -22,8 +22,8 @@ export default function Dashboard() {
   const { data: signals } = useListSignals();
   const { data: sheiCards } = useListSheiCards();
 
-  const recentSignals = (signals ?? []).slice(0, 5);
-  const urgentCards = (sheiCards ?? []).filter((c) => c.urgency === "IMMEDIATE" || c.status === "ACTIVE").slice(0, 4);
+  const recentSignals = (signals ?? []).slice(0, 8);
+  const urgentCards = (sheiCards ?? []).filter((c) => c.urgency === "IMMEDIATE" || c.status === "ACTIVE");
 
   if (isLoading) {
     return (
@@ -140,7 +140,7 @@ export default function Dashboard() {
                       {signal.strength}
                     </Badge>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm leading-snug line-clamp-2">{signal.description}</p>
+                      <p className="text-sm leading-snug line-clamp-2">{signal.summary}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{signal.source?.replace(/_/g, " ")}</p>
                     </div>
                   </div>

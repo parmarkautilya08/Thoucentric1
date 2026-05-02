@@ -30,9 +30,9 @@ router.get("/dashboard/summary", async (req, res) => {
 });
 
 router.get("/dashboard/recent-signals", async (req, res) => {
-  const signals = await db.select().from(signalsTable).orderBy(signalsTable.createdAt);
-  const recent = signals.reverse().slice(0, 10);
-  res.json(recent);
+  const { desc } = await import("drizzle-orm");
+  const signals = await db.select().from(signalsTable).orderBy(desc(signalsTable.createdAt));
+  res.json(signals);
 });
 
 router.get("/dashboard/signal-breakdown", async (req, res) => {

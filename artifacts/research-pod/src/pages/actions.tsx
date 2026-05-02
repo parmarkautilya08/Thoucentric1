@@ -46,7 +46,7 @@ export default function Actions() {
     (a, b) => (urgencyRank[a.urgency ?? ""] ?? 99) - (urgencyRank[b.urgency ?? ""] ?? 99)
   );
 
-  const highSignals = (signals ?? []).filter((s) => s.strength === "HIGH" && s.action === "SHEI_CANDIDATE");
+  const highSignals = (signals ?? []).filter((s) => s.strength === "HIGH" && (s.action === "ACT_NOW" || s.action === "INVESTIGATE"));
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -206,7 +206,7 @@ export default function Actions() {
           <BarChart2 className="h-3.5 w-3.5 text-blue-400" /> KPI Gap → Entry Points
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {(benchmarks ?? []).slice(0, 6).map((b) => (
+          {(benchmarks ?? []).map((b) => (
             <Card key={b.id} className="border border-border hover:border-primary/40 transition-all cursor-pointer group">
               <CardContent className="pt-4 space-y-2">
                 <div className="text-xs font-mono text-muted-foreground">{b.functionTag?.replace(/_/g, " ")}</div>
@@ -225,7 +225,7 @@ export default function Actions() {
         </div>
         <Link href="/benchmarks">
           <div className="mt-3 text-xs text-primary hover:underline cursor-pointer flex items-center gap-1">
-            View all 15 KPI benchmarks <ArrowRight className="h-3 w-3" />
+            Full benchmark detail view <ArrowRight className="h-3 w-3" />
           </div>
         </Link>
       </div>

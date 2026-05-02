@@ -33,7 +33,7 @@ export default function CompanyDetail() {
   const linkedSignals = (allSignals ?? []).filter((s) =>
     s.companyName?.toLowerCase().includes(company.name.toLowerCase()) ||
     s.companyName === "All FMCG"
-  ).slice(0, 4);
+  );
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl">
