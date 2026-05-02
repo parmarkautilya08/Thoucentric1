@@ -1,8 +1,8 @@
-# Industry Research Pod — Thoucentric FMCG Intelligence Platform
+# Industry Research Pod — Thoucentric FMCG Intelligence Platform (v3.0)
 
 ## Overview
 
-Full-stack consulting intelligence platform for FMCG research using the SHEI framework (Signal → Hypothesis → Evidence → Implication). Built for Thoucentric consultants.
+Bloomberg × McKinsey × Consulting BD Engine. Full-stack consulting intelligence platform for FMCG research using the SHEI framework (Signal → Hypothesis → Evidence → Implication). Built for Thoucentric consultants. Upgraded to Master Prompt v3.0 with 4-agent multi-agent OS, mandatory 9-section output, trajectory memory, contradiction detection, and scope classification.
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 
@@ -32,16 +32,27 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `lib/api-zod` — Generated Zod schemas (Orval output, only exports `./generated/api`)
 - `lib/api-client-react` — Generated React Query hooks (Orval output)
 
-## Database Schema
+## Database Schema (v3.0)
 
 Five tables: `companies`, `shei_cards`, `signals`, `benchmarks`, `playbook_sections`
 
-**Seed data (force-reseeds on startup):**
+### v3.0 Schema Fields
+
+**signals**: scope (COMPANY_SPECIFIC/INDUSTRY_WIDE/MACRO), pastState (history string), trajectoryDir (IMPROVING/DETERIORATING/STABLE), action (ACT_NOW/INVESTIGATE/MONITOR)
+
+**shei_cards**: contradictions, kpiLinkage, signalCluster, trajectoryContext (full trajectory narrative)
+
+**benchmarks**: calculationLogic (exact formula for consulting use)
+
+**playbook_sections**: triggerSignals (signal pattern descriptions that trigger each playbook)
+
+### Seed Data
+
 - 15 FMCG companies: HUL, ITC, Nestlé India, Dabur, Marico, Godrej CP, Britannia, Emami, Tata Consumer, Colgate India, Reckitt India, Mondelez India + global: Unilever, P&G, Nestlé Global
-- 5 SHEI cards with financialImpact, whyNow, relatedCompanies, pitchAnchor, provocQuestion
-- 15 KPI benchmarks across 6 functions with unit, companyExamples, whyItMatters, consultingAngle, improvementLevers
-- 15 signals with eventType, financialImpact, scRelevance, quarter, publishedDate, companyName
-- 5 playbooks (SC Planning, Procurement, RTM, Sustainability, Manufacturing)
+- 7 SHEI cards: all with full v3.0 fields (contradictions, kpiLinkage, signalCluster, trajectoryContext)
+- 15 KPI benchmarks: all with calculationLogic, unit, companyExamples, whyItMatters, consultingAngle
+- 15 signals: all with scope, pastState, trajectoryDir, action, eventType, financialImpact
+- 5 playbooks: all with triggerSignals, industry landscape, failure modes, tech enablers
 
 **Admin endpoint:** `POST /api/admin/reseed` — force re-seeds all data
 
@@ -49,10 +60,20 @@ Five tables: `companies`, `shei_cards`, `signals`, `benchmarks`, `playbook_secti
 
 - `/` — Dashboard with real-time stats, recent signals, active hypotheses
 - `/companies` — 15-company grid with search/filter; `/companies/:id` detail
-- `/shei-cards` — SHEI hypothesis cards with financial impact + why now panels; `/shei-cards/:id` full detail with pitch anchor, provoking question
-- `/signals` — Signal tracker with strength/category/event type filters; financial impact + SC relevance per signal
-- `/benchmarks` — KPI benchmarks grouped by function (15 KPIs); clickable drill-down modal with company examples, why-it-matters, consulting entry points
-- `/playbooks` — Playbook sections with industry landscape, failure modes, tech enablers
+- `/shei-cards` — SHEI hypothesis cards list; `/shei-cards/:id` full detail with Trajectory, Contradictions, KPI Linkage, Signal Cluster panels
+- `/signals` — Signal tracker with Action/Strength/Category/Scope filters; trajectory arrows with past-state history; financial impact boxes
+- `/benchmarks` — KPI benchmarks grouped by function (15 KPIs) with calculationLogic drill-down
+- `/playbooks` — Playbook sections with triggerSignals, industry landscape, failure modes, tech enablers
+
+## AI Engine (v3.0)
+
+- `artifacts/api-server/src/routes/ask.ts` — 4-agent multi-agent OS
+- Mandatory 9-section output: SIGNALS DECODED / HYPOTHESIS / EVIDENCE / CONTRADICTIONS / TRAJECTORY / CLIENT IMPLICATIONS / THOUCENTRIC ANGLES / FINANCIAL IMPACT / PROVOKING QUESTIONS
+- Reasoning pipeline STEP 1-6: intelligence gathering, contradiction detection, trajectory analysis, SHEI framework, consulting BD, output generation
+- Urgency values: IMMEDIATE / MEDIUM_TERM / STRUCTURAL
+- Signal action values: ACT_NOW / INVESTIGATE / MONITOR
+- Scope values: COMPANY_SPECIFIC / INDUSTRY_WIDE / MACRO
+- Trajectory values: IMPROVING / DETERIORATING / STABLE
 
 ## Key Commands
 
@@ -67,4 +88,4 @@ Five tables: `companies`, `shei_cards`, `signals`, `benchmarks`, `playbook_secti
 - `lib/api-zod/src/index.ts` must ONLY export `./generated/api` (NOT `./generated/types`) — Orval generates both inline Zod schemas and TS types with the same names, causing duplicate export errors
 - API routes mounted at `/api` prefix in `app.ts`
 - Seed runs automatically on startup (idempotent — checks for existing data)
-- Port 24993 was originally assigned to research-pod but is not a supported workflow port; changed to port 3000
+- SHEI urgency uses IMMEDIATE/MEDIUM_TERM/STRUCTURAL — do NOT change to CRITICAL/HIGH/MEDIUM
