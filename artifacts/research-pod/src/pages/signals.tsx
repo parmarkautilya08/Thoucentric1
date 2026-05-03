@@ -186,7 +186,7 @@ Please:
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed to create signal");
-      await queryClient.invalidateQueries({ queryKey: ["listSignals"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/signals"] });
       setShowAddModal(false);
       setFormData(EMPTY_FORM);
     } catch {

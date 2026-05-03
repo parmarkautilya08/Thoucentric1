@@ -162,7 +162,7 @@ Be specific, concise, and use the intelligence data above. Avoid generic stateme
             if (data === "[DONE]") break;
             try {
               const json = JSON.parse(data);
-              const token = json.choices?.[0]?.delta?.content ?? "";
+              const token = json.content ?? "";
               if (token) setBrief((prev) => prev + token);
             } catch {}
           }

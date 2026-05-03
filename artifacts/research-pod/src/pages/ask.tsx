@@ -71,7 +71,6 @@ export default function Ask() {
     try {
       const history = updatedMessages
         .filter(m => !m.streaming)
-        .concat({ role: "user", content: q })
         .filter(m => m.content.trim().length > 0);
 
       const res = await fetch("/api/ask", {
