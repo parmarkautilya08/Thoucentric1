@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Industry Research Pod — App Screenshots</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    padding: 40px 32px 80px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .header h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #38bdf8;
+    margin-bottom: 8px;
+  }
+  .header p { color: #64748b; font-size: 1rem; }
+  .header .meta {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 18px;
+    background: #1e293b;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    color: #94a3b8;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin: 56px 0 20px;
+    padding-left: 4px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+    gap: 28px;
+  }
+  .grid.single { grid-template-columns: 1fr; }
+  .grid.two    { grid-template-columns: repeat(2, 1fr); }
+
+  .card {
+    background: #141921;
+    border: 1px solid #1e2d3d;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 1px #38bdf8, 0 8px 32px rgba(56,189,248,0.08);
+  }
+  .card img {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid #1e2d3d;
+  }
+  .card-body { padding: 16px 20px 18px; }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+  }
+  .card-route {
+    font-size: 0.78rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #38bdf8;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 0.83rem;
+    color: #64748b;
+    line-height: 1.5;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+    margin-top: 8px;
+  }
+  .badge-new    { background: #064e3b; color: #34d399; border: 1px solid #065f46; }
+  .badge-fixed  { background: #1e1b4b; color: #818cf8; border: 1px solid #312e81; }
+  .badge-ai     { background: #1c1917; color: #fb923c; border: 1px solid #44403c; }
+  .badge-live   { background: #172554; color: #60a5fa; border: 1px solid #1e3a8a; }
+
+  .footer {
+    text-align: center;
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid #1e293b;
+    color: #334155;
+    font-size: 0.82rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Industry Research Pod</h1>
+  <p>Thoucentric FMCG Intelligence Platform — All Screens Reference</p>
+  <span class="meta">May 2025 · 13 screens · Internal Use Only</span>
+</div>
+
+<!-- ── INTELLIGENCE LAYER ─────────────────────────────────────────────── -->
+<div class="section-label">Intelligence Layer</div>
+<div class="grid two">
+
+  <div class="card">
+    <img src="../screenshots/01_dashboard.jpg" alt="Command Centre Dashboard" />
+    <div class="card-body">
+      <div class="card-title">Command Centre</div>
+      <div class="card-route">/</div>
+      <div class="card-desc">Live stat counters for all data assets. Recent Signals feed + Active Hypotheses panel. Single-glance readiness for any client briefing.</div>
+      <span class="badge badge-live">LIVE DATA</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/02_companies_list.jpg" alt="Company Intelligence List" />
+    <div class="card-body">
+      <div class="card-title">Company Intelligence</div>
+      <div class="card-route">/companies</div>
+      <div class="card-desc">35 companies tracked. Search + Tier + Geography filters. Each card shows revenue, EBITDA, confidence rating, and Quick Take.</div>
+      <span class="badge badge-fixed">ROUTING FIXED</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/03_company_detail_hul.jpg" alt="Company Detail — HUL" />
+    <div class="card-body">
+      <div class="card-title">Company Detail  (HUL example)</div>
+      <div class="card-route">/companies/HUL</div>
+      <div class="card-desc">Financial KPIs · Strategic Priorities · SC Intelligence · Tech Maturity · Open Problems · Benchmark Positioning · Linked SHEI Cards. Ask AI button prefills context.</div>
+      <span class="badge badge-fixed">STRING ROUTING</span>
+      <span class="badge badge-ai">ASK AI</span>
+      <span class="badge badge-new">BENCHMARK POSITIONING</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/04_shei_cards_list.jpg" alt="SHEI Hypothesis Cards" />
+    <div class="card-body">
+      <div class="card-title">SHEI Hypothesis Cards</div>
+      <div class="card-route">/shei-cards</div>
+      <div class="card-desc">15 cards in the Signal → Hypothesis → Evidence → Implication framework. Financial impact + Why Now callouts inline. Urgency, function, and status filters.</div>
+      <span class="badge badge-fixed">ROUTING FIXED</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/05_shei_card_detail.jpg" alt="SHEI Card Detail" />
+    <div class="card-body">
+      <div class="card-title">SHEI Card Detail</div>
+      <div class="card-route">/shei-cards/SHEI-2025-Q2-01</div>
+      <div class="card-desc">Full SHEI framework breakdown. Trajectory narrative: Past → Current → Direction → Inflection. Clickable company badges + benchmark annotation links. Analyze with AI.</div>
+      <span class="badge badge-fixed">STRING ROUTING</span>
+      <span class="badge badge-ai">ANALYZE WITH AI</span>
+      <span class="badge badge-new">CROSS-LINKS</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/06_benchmarks.jpg" alt="KPI Benchmarks" />
+    <div class="card-body">
+      <div class="card-title">KPI Benchmarks</div>
+      <div class="card-route">/benchmarks</div>
+      <div class="card-desc">24 KPI benchmarks — Best / Median / Laggard ranges. Click any card for full drill-down with SHEI annotation link and Ask AI. Function filter for focused browsing.</div>
+      <span class="badge badge-ai">ASK AI IN DRILL-DOWN</span>
+      <span class="badge badge-new">SHEI LINK</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SIGNALS LAYER ──────────────────────────────────────────────────── -->
+<div class="section-label">Signals Layer</div>
+<div class="grid two">
+
+  <div class="card">
+    <img src="../screenshots/07_signals.jpg" alt="Signal Tracker" />
+    <div class="card-body">
+      <div class="card-title">Signal Tracker</div>
+      <div class="card-route">/signals</div>
+      <div class="card-desc">58 signals across 6 categories. Full financial impact, SC relevance, past state, trajectory, and source on each card. Ask AI per signal. Consultants can add new signals via modal.</div>
+      <span class="badge badge-new">ADD SIGNAL MODAL</span>
+      <span class="badge badge-ai">ASK AI PER SIGNAL</span>
+      <span class="badge badge-live">58 SIGNALS</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/08_timeline.jpg" alt="Signal Timeline" />
+    <div class="card-body">
+      <div class="card-title">Signal Timeline</div>
+      <div class="card-route">/timeline</div>
+      <div class="card-desc">Chronological view of all 58 events grouped by quarter. Colour-coded by strength. Full financial impact and SC relevance displayed inline with each event.</div>
+      <span class="badge badge-live">58 EVENTS</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/09_live_feed.jpg" alt="Live Intelligence Feed" />
+    <div class="card-body">
+      <div class="card-title">Live Intelligence Feed</div>
+      <div class="card-route">/feeds</div>
+      <div class="card-desc">125+ live articles (NewsAPI) across 6 tab categories. 10 live commodity prices. Stale data detection with amber warning. 8 company-specific event feeds. Analyze any article through SHEI framework.</div>
+      <span class="badge badge-live">LIVE RSS</span>
+      <span class="badge badge-fixed">CPO TICKER FIXED</span>
+      <span class="badge badge-fixed">SOURCE INFO FIXED</span>
+      <span class="badge badge-new">STALE DETECTION</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── ACTIVATION LAYER ───────────────────────────────────────────────── -->
+<div class="section-label">Activation Layer</div>
+<div class="grid two">
+
+  <div class="card">
+    <img src="../screenshots/10_actions.jpg" alt="Actions & Activation" />
+    <div class="card-body">
+      <div class="card-title">Actions & Activation</div>
+      <div class="card-route">/actions</div>
+      <div class="card-desc">Priority consulting opportunities ranked by urgency. Financial Opportunity + Engagement Hypothesis + Pitch Anchor + CXO Provocation for each. Target accounts and SHEI analysis linked.</div>
+      <span class="badge badge-fixed">LINKS FIXED</span>
+      <span class="badge badge-new">NEW BADGE (localStorage)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/11_meeting_prep.jpg" alt="Meeting Prep" />
+    <div class="card-body">
+      <div class="card-title">Meeting Prep  🆕</div>
+      <div class="card-route">/meeting-prep</div>
+      <div class="card-desc">AI pre-meeting brief generator. Select company, executive role, date, and focus area. GPT-4o streams a full brief: Company Snapshot · SHEI Hypotheses · Signals · Benchmark Context · Suggested Questions · Consulting Entry Points.</div>
+      <span class="badge badge-new">NEW PAGE</span>
+      <span class="badge badge-ai">GPT-4o STREAMING</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/12_ask_anything.jpg" alt="Ask Anything AI" />
+    <div class="card-body">
+      <div class="card-title">Ask Anything (AI)</div>
+      <div class="card-route">/ask</div>
+      <div class="card-desc">Global FMCG knowledge AI. GPT-4o streaming with session memory. Grounded in Thoucentric intelligence. 10 suggested prompts. Prefillable from any page via Ask AI buttons throughout the platform.</div>
+      <span class="badge badge-ai">GPT-4o STREAMING</span>
+      <span class="badge badge-new">PREFILL FROM ANY PAGE</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="../screenshots/13_playbooks.jpg" alt="Consulting Playbooks" />
+    <div class="card-body">
+      <div class="card-title">Consulting Playbooks</div>
+      <div class="card-route">/playbooks</div>
+      <div class="card-desc">10 published engagement blueprints. Trigger signals, entry points, deliverables, and financial opportunity sizing. Demand Sensing Diagnostic · Cold Chain Strategy · EPR Compliance · Manufacturing Excellence · and more.</div>
+      <span class="badge badge-live">10 PLAYBOOKS</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Thoucentric · Industry Research Pod · May 2025 · Internal Use Only<br>
+  13 screens captured · All data is intelligence seed for consultant use
+</div>
+
+</body>
+</html>

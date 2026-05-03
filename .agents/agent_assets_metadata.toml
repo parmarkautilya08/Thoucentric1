@@ -30,3 +30,9 @@ id = "LX3KJzQRQygdMkIVnmKc8"
 uri = "file://Thoucentric_Industry_Research_Pod_Master_Prompt_v4.docx"
 type = "word_document"
 title = "Master Prompt v4.0 — Industry Research Pod (with Live Feed Module)"
+
+[[outputs]]
+id = "irK9FgwADdHU3OsldE2hH"
+uri = "file://exports/Industry_Research_Pod_Deliverables.zip"
+type = "unspecified"
+title = "Industry Research Pod — Build Log (.docx) + Screenshot Gallery (.html) + All 13 Screenshots"
