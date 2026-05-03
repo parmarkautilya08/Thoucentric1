@@ -18,3 +18,9 @@ id = "pkZfar9ae5uJEIENvWDSt"
 uri = "file://Thoucentric_Master_Prompt_v3.docx"
 type = "word_document"
 title = "Thoucentric Master Prompt v3.0 — Final"
+
+[[outputs]]
+id = "m71HUi23UWTEPXnyvTutM"
+uri = "file://Thoucentric_Industry_Research_Pod_Master_Prompt_v3.docx"
+type = "word_document"
+title = "Industry Research Pod — Master Build Prompt v3.0"
