@@ -46,16 +46,26 @@ router.post("/shei-cards", async (req, res) => {
 });
 
 router.get("/shei-cards/:id", async (req, res) => {
-  const params = GetSheiCardParams.safeParse({ id: Number(req.params.id) });
-  if (!params.success) {
-    res.status(400).json({ error: "Invalid id" });
-    return;
-  }
+  const rawId = req.params.id;
+  const numId = Number(rawId);
 
-  const [card] = await db
-    .select()
-    .from(sheiCardsTable)
-    .where(eq(sheiCardsTable.id, params.data.id));
+  let card;
+  if (!isNaN(numId) && Number.isInteger(numId) && numId > 0) {
+    const params = GetSheiCardParams.safeParse({ id: numId });
+    if (!params.success) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+    [card] = await db
+      .select()
+      .from(sheiCardsTable)
+      .where(eq(sheiCardsTable.id, params.data.id));
+  } else {
+    [card] = await db
+      .select()
+      .from(sheiCardsTable)
+      .where(eq(sheiCardsTable.cardId, rawId));
+  }
 
   if (!card) {
     res.status(404).json({ error: "SHEI card not found" });

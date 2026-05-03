@@ -51,6 +51,7 @@ interface Commodity {
   changePct: string | null;
   currency: string | null;
   marketTime: string | null;
+  isStale: boolean;
 }
 
 function useNews(category: string) {
@@ -178,8 +179,8 @@ function CommodityCard({ c }: { c: Commodity }) {
           {c.relevance}
         </p>
         {c.marketTime && (
-          <p className="text-[10px] text-muted-foreground/50">
-            Updated {timeAgo(c.marketTime)}
+          <p className={`text-[10px] ${c.isStale ? "text-amber-500/70" : "text-muted-foreground/50"}`}>
+            {c.isStale ? "⚠ Stale data · " : ""}Updated {timeAgo(c.marketTime)}
           </p>
         )}
       </CardContent>

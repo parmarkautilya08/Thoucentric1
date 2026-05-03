@@ -1,11 +1,12 @@
-import { useRoute, Link } from "wouter";
-import { useGetSheiCard } from "@workspace/api-client-react";
+import { useRoute, Link, useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { useListBenchmarks } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ArrowLeft, TrendingUp, Clock, DollarSign, Building2, MessageSquare,
-  HelpCircle, Calendar, AlertTriangle, BarChart2, Layers, GitBranch
+  HelpCircle, Calendar, AlertTriangle, BarChart2, Layers, GitBranch, Bot, ChevronRight,
 } from "lucide-react";
 
 const functionLabels: Record<string, string> = {
@@ -28,26 +29,76 @@ const FRAMEWORK = [
 
 export default function SheiCardDetail() {
   const [, params] = useRoute("/shei-cards/:id");
-  const id = Number(params?.id);
-  const { data: card, isLoading } = useGetSheiCard(id);
+  const idParam = params?.id ?? "";
+  const [, navigate] = useLocation();
 
-  if (isLoading) return (
-    <div className="space-y-4">
-      <Skeleton className="h-8 w-48" />
-      <Skeleton className="h-96 rounded-xl" />
-    </div>
-  );
+  const { data: card, isLoading } = useQuery({
+    queryKey: ["shei-card", idParam],
+    queryFn: async () => {
+      if (!idParam) return null;
+      const res = await fetch(`/api/shei-cards/${encodeURIComponent(idParam)}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: !!idParam,
+  });
 
-  if (!card) return (
-    <div className="flex flex-col items-center justify-center py-16">
-      <p className="text-muted-foreground">SHEI card not found</p>
-      <Link href="/shei-cards" className="text-primary text-sm mt-2 hover:underline">← Back to SHEI Cards</Link>
-    </div>
-  );
+  const { data: allBenchmarks } = useListBenchmarks();
 
-  const relatedCompanies = card.relatedCompanies?.split(",").map((c) => c.trim()).filter(Boolean) ?? [];
-  const kpiLinks = card.kpiLinkage?.split(";").map((k) => k.trim()).filter(Boolean) ?? [];
-  const signalItems = card.signalCluster?.split(";").map((s) => s.trim()).filter(Boolean) ?? [];
+  const relatedCompanies = card?.relatedCompanies?.split(",").map((c: string) => c.trim()).filter(Boolean) ?? [];
+  const kpiLinks = card?.kpiLinkage?.split(";").map((k: string) => k.trim()).filter(Boolean) ?? [];
+  const signalItems = card?.signalCluster?.split(";").map((s: string) => s.trim()).filter(Boolean) ?? [];
+
+  const linkedBenchmarks = (allBenchmarks ?? []).filter((b) =>
+    kpiLinks.some((kpi) =>
+      b.kpiName?.toLowerCase().includes(kpi.toLowerCase().split(":")[0].trim().toLowerCase()) ||
+      kpi.toLowerCase().includes(b.kpiName?.toLowerCase() ?? "")
+    )
+  ).slice(0, 4);
+
+  function handleAskAI() {
+    if (!card) return;
+    const prompt = `Deep-dive analysis of SHEI hypothesis: "${card.title}"
+
+SHEI Framework:
+- Signal (S): ${card.signal ?? "N/A"}
+- Hypothesis (H): ${card.hypothesis ?? "N/A"}
+- Evidence (E): ${card.evidence ?? "N/A"}
+- Implication (I): ${card.clientImplication ?? "N/A"}
+
+Financial Impact: ${card.financialImpact ?? "N/A"}
+Why Now: ${card.whyNow ?? "N/A"}
+Thoucentric Angle: ${card.thoucentriqAngle ?? "N/A"}
+Contradictions: ${card.contradictions ?? "None noted"}
+
+Please address:
+1. How strong is the evidence base for this hypothesis?
+2. Which companies are most exposed and why?
+3. What are the 3 most compelling entry points for Thoucentric?
+4. How should we handle the contradictions noted above?
+5. How do we position this in a CXO conversation?`;
+
+    sessionStorage.setItem("rp_ask_prefill", prompt);
+    navigate("/ask");
+  }
+
+  if (isLoading)
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-96 rounded-xl" />
+      </div>
+    );
+
+  if (!card)
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <p className="text-muted-foreground">SHEI card not found</p>
+        <Link href="/shei-cards" className="text-primary text-sm mt-2 hover:underline">
+          ← Back to SHEI Cards
+        </Link>
+      </div>
+    );
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300 max-w-4xl">
@@ -59,29 +110,50 @@ export default function SheiCardDetail() {
 
       {/* Header */}
       <div>
-        <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className="text-xs font-mono text-muted-foreground">{card.cardId}</span>
-          <Badge variant="outline" className="text-xs">{functionLabels[card.functionTag] || card.functionTag}</Badge>
-          <Badge variant="outline" className="text-xs">{card.geographyTag}</Badge>
-          {card.status && <Badge variant="outline" className="text-xs">{card.status}</Badge>}
-          {card.urgency && (
-            <Badge variant="outline" className={`text-xs ${card.urgency === "IMMEDIATE" ? "text-red-400 border-red-500/30" : card.urgency === "MEDIUM_TERM" ? "text-amber-400 border-amber-500/30" : ""}`}>
-              {card.urgency?.replace(/_/g, " ")}
-            </Badge>
-          )}
-        </div>
-        <h1 className="text-2xl font-bold font-mono tracking-tight leading-snug">{card.title}</h1>
-        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-          {card.version && <span>v{card.version}</span>}
-          {card.nextReview && (
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" /> Next review: {card.nextReview}
-            </span>
-          )}
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span className="text-xs font-mono text-muted-foreground">{card.cardId}</span>
+              <Badge variant="outline" className="text-xs">
+                {functionLabels[card.functionTag] || card.functionTag}
+              </Badge>
+              <Badge variant="outline" className="text-xs">{card.geographyTag}</Badge>
+              {card.status && <Badge variant="outline" className="text-xs">{card.status}</Badge>}
+              {card.urgency && (
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${
+                    card.urgency === "IMMEDIATE"
+                      ? "text-red-400 border-red-500/30"
+                      : card.urgency === "MEDIUM_TERM"
+                      ? "text-amber-400 border-amber-500/30"
+                      : ""
+                  }`}
+                >
+                  {card.urgency?.replace(/_/g, " ")}
+                </Badge>
+              )}
+            </div>
+            <h1 className="text-2xl font-bold font-mono tracking-tight leading-snug">{card.title}</h1>
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+              {card.version && <span>v{card.version}</span>}
+              {card.nextReview && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" /> Next review: {card.nextReview}
+                </span>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={handleAskAI}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/30 text-xs font-medium hover:bg-primary/20 transition-all shrink-0"
+          >
+            <Bot className="h-3.5 w-3.5" /> Analyze with AI
+          </button>
         </div>
       </div>
 
-      {/* Financial Impact + Why Now — top banner */}
+      {/* Financial Impact + Why Now */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {card.financialImpact && (
           <Card className="bg-emerald-500/5 border-emerald-500/30">
@@ -157,7 +229,7 @@ export default function SheiCardDetail() {
         </Card>
       )}
 
-      {/* KPI Linkage */}
+      {/* KPI Linkage — cross-module links to Benchmarks */}
       {kpiLinks.length > 0 && (
         <Card className="bg-violet-500/5 border-violet-500/30">
           <CardHeader className="pb-2">
@@ -170,10 +242,29 @@ export default function SheiCardDetail() {
               {kpiLinks.map((k, i) => (
                 <div key={i} className="flex items-start gap-2 text-sm">
                   <span className="text-violet-400 shrink-0 font-mono">•</span>
-                  <span className="leading-snug">{k}</span>
+                  <span className="leading-snug flex-1">{k}</span>
                 </div>
               ))}
             </div>
+            {linkedBenchmarks.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-violet-500/20">
+                <div className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
+                  <ChevronRight className="h-3 w-3" /> Matched benchmarks:
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {linkedBenchmarks.map((b) => (
+                    <Link key={b.id} href="/benchmarks">
+                      <Badge
+                        variant="outline"
+                        className="text-xs cursor-pointer hover:border-violet-400 hover:text-violet-400 transition-colors"
+                      >
+                        {b.kpiName}
+                      </Badge>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -189,7 +280,9 @@ export default function SheiCardDetail() {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {signalItems.map((s, i) => (
-                <Badge key={i} variant="outline" className="text-xs">{s}</Badge>
+                <Badge key={i} variant="outline" className="text-xs">
+                  {s}
+                </Badge>
               ))}
             </div>
           </CardContent>
@@ -240,15 +333,22 @@ export default function SheiCardDetail() {
         )}
       </div>
 
-      {/* Related Companies */}
+      {/* Related Companies — clickable links */}
       {relatedCompanies.length > 0 && (
         <div>
           <h3 className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
             <Building2 className="h-3.5 w-3.5" /> Related Companies
           </h3>
           <div className="flex flex-wrap gap-2">
-            {relatedCompanies.map((c) => (
-              <Badge key={c} variant="outline" className="text-xs">{c}</Badge>
+            {relatedCompanies.map((c: string) => (
+              <Link key={c} href={`/companies/${c}`}>
+                <Badge
+                  variant="outline"
+                  className="text-xs cursor-pointer hover:border-primary hover:text-primary transition-colors"
+                >
+                  {c}
+                </Badge>
+              </Link>
             ))}
           </div>
         </div>

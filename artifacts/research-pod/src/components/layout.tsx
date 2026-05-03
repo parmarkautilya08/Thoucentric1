@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Clock,
   Rss,
+  CalendarCheck,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -36,6 +37,7 @@ const NAV_SECTIONS = [
     label: "Activation",
     items: [
       { href: "/actions", label: "Actions", icon: Zap },
+      { href: "/meeting-prep", label: "Meeting Prep", icon: CalendarCheck },
       { href: "/ask", label: "Ask Anything", icon: MessageCircle },
       { href: "/playbooks", label: "Playbooks", icon: BookOpen },
     ],
@@ -46,6 +48,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const [refreshStatus, setRefreshStatus] = useState<"idle" | "ok" | "error">("idle");
+  const [actionsNew, setActionsNew] = useState(() => !localStorage.getItem("rp_actions_seen"));
+  const [meetingPrepNew, setMeetingPrepNew] = useState(
+    () => !localStorage.getItem("rp_meeting_prep_seen")
+  );
+
+  useEffect(() => {
+    if (location === "/actions" && actionsNew) {
+      localStorage.setItem("rp_actions_seen", "1");
+      setActionsNew(false);
+    }
+    if (location === "/meeting-prep" && meetingPrepNew) {
+      localStorage.setItem("rp_meeting_prep_seen", "1");
+      setMeetingPrepNew(false);
+    }
+  }, [location, actionsNew, meetingPrepNew]);
 
   const handleRefresh = async () => {
     if (refreshing) return;
@@ -71,9 +88,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  function getItemBadge(href: string) {
+    if (href === "/ask") {
+      return (
+        <span className="ml-auto text-[9px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-mono">
+          AI
+        </span>
+      );
+    }
+    if (href === "/feeds") {
+      return (
+        <span className="ml-auto text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-mono">
+          RSS
+        </span>
+      );
+    }
+    if (href === "/actions" && actionsNew) {
+      return (
+        <span className="ml-auto text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">
+          NEW
+        </span>
+      );
+    }
+    if (href === "/meeting-prep" && meetingPrepNew) {
+      return (
+        <span className="ml-auto text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono">
+          NEW
+        </span>
+      );
+    }
+    return null;
+  }
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-card flex flex-col">
         <div className="p-5 border-b border-border">
           <h1 className="text-lg font-bold tracking-tight text-primary font-mono">INDUSTRY POD</h1>
@@ -91,7 +139,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = item.icon;
-                  const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+                  const isActive =
+                    location === item.href ||
+                    (item.href !== "/" && location.startsWith(item.href));
                   return (
                     <Link key={item.href} href={item.href}>
                       <div
@@ -103,15 +153,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       >
                         <Icon className="h-4 w-4 shrink-0" />
                         {item.label}
-                        {item.href === "/ask" && (
-                          <span className="ml-auto text-[9px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-mono">AI</span>
-                        )}
-                        {item.href === "/actions" && (
-                          <span className="ml-auto text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">NEW</span>
-                        )}
-                        {item.href === "/feeds" && (
-                          <span className="ml-auto text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-mono">RSS</span>
-                        )}
+                        {getItemBadge(item.href)}
                       </div>
                     </Link>
                   );
@@ -121,7 +163,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        {/* Refresh Button */}
         <div className="p-4 border-t border-border">
           <button
             onClick={handleRefresh}
@@ -146,7 +187,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <div className="p-8 max-w-7xl mx-auto">{children}</div>
       </main>

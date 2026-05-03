@@ -161,7 +161,7 @@ export default function Actions() {
                     </div>
                   )}
 
-                  <Link href={`/shei-cards/${card.id}`}>
+                  <Link href={`/shei-cards/${card.cardId}`}>
                     <div className="flex items-center gap-1.5 text-xs text-primary hover:underline cursor-pointer">
                       Full SHEI analysis <ArrowRight className="h-3 w-3" />
                     </div>

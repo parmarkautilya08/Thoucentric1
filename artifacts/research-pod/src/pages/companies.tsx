@@ -76,7 +76,7 @@ export default function Companies() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map((company) => (
-            <Link key={company.id} href={`/companies/${company.id}`}>
+            <Link key={company.id} href={`/companies/${company.name}`}>
               <Card className="hover-elevate cursor-pointer h-full border border-border hover:border-primary/50 transition-all duration-200 group">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">

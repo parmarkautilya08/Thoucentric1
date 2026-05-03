@@ -1,10 +1,19 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useListSignals } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Activity, Calendar, Building2, Tag, TrendingUp, TrendingDown, Minus, DollarSign, Zap, ArrowUpRight, ArrowDownRight, ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+} from "@/components/ui/dialog";
+import { useLocation } from "wouter";
+import {
+  Activity, Calendar, Building2, Tag, TrendingUp, TrendingDown, Minus,
+  DollarSign, Zap, ArrowUpRight, ArrowDownRight, ArrowRight, Plus, Bot, X,
+} from "lucide-react";
 
 const strengthColor = (s?: string) => {
   switch (s) {
@@ -87,11 +96,43 @@ const actionColor = (a?: string) => {
   }
 };
 
+interface AddSignalForm {
+  summary: string;
+  category: string;
+  strength: string;
+  companyName: string;
+  action: string;
+  source: string;
+  quarter: string;
+  financialImpact: string;
+  scope: string;
+  eventType: string;
+}
+
+const EMPTY_FORM: AddSignalForm = {
+  summary: "",
+  category: "",
+  strength: "",
+  companyName: "",
+  action: "",
+  source: "",
+  quarter: "",
+  financialImpact: "",
+  scope: "",
+  eventType: "",
+};
+
 export default function Signals() {
   const [strengthFilter, setStrengthFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [scopeFilter, setScopeFilter] = useState("all");
   const [actionFilter, setActionFilter] = useState("all");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [formData, setFormData] = useState<AddSignalForm>(EMPTY_FORM);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [, navigate] = useLocation();
+  const queryClient = useQueryClient();
 
   const { data: signals, isLoading } = useListSignals();
 
@@ -103,13 +144,73 @@ export default function Signals() {
     return matchStrength && matchCat && matchScope && matchAction;
   });
 
+  function handleAskAI(signal: typeof filtered[0]) {
+    const prompt = `Analyze this FMCG signal using the SHEI framework:
+
+Company: ${signal.companyName ?? "Industry-wide"}
+Category: ${signal.category?.replace(/_/g, " ")}
+Strength: ${signal.strength} | Scope: ${signal.scope ?? "N/A"}
+Quarter: ${signal.quarter ?? "N/A"}
+
+Signal Summary: ${signal.summary}
+
+${signal.financialImpact ? `Financial Impact: ${signal.financialImpact}` : ""}
+${signal.scRelevance ? `SC Relevance: ${signal.scRelevance}` : ""}
+${signal.pastState ? `Past State: ${signal.pastState}` : ""}
+
+Please:
+1. Apply the full SHEI framework (Signal → Hypothesis → Evidence → Implication)
+2. Assess the trajectory direction and magnitude
+3. Quantify the potential financial impact on affected companies
+4. Identify specific Thoucentric consulting entry points from this signal
+5. Suggest 2 sharp CXO questions this signal enables`;
+
+    sessionStorage.setItem("rp_ask_prefill", prompt);
+    navigate("/ask");
+  }
+
+  async function handleAddSignal() {
+    if (!formData.summary.trim() || !formData.category || !formData.strength) {
+      setSubmitError("Summary, category, and strength are required.");
+      return;
+    }
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const payload = Object.fromEntries(
+        Object.entries(formData).filter(([, v]) => v !== "")
+      );
+      const res = await fetch("/api/signals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Failed to create signal");
+      await queryClient.invalidateQueries({ queryKey: ["listSignals"] });
+      setShowAddModal(false);
+      setFormData(EMPTY_FORM);
+    } catch {
+      setSubmitError("Failed to save signal. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div>
-        <h1 className="text-3xl font-bold font-mono tracking-tight">Signal Tracker</h1>
-        <p className="text-muted-foreground mt-1">
-          Finance · News · Events intelligence across FMCG · {filtered.length} signals
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold font-mono tracking-tight">Signal Tracker</h1>
+          <p className="text-muted-foreground mt-1">
+            Finance · News · Events intelligence across FMCG · {filtered.length} signals
+          </p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary border border-primary/30 text-sm font-medium hover:bg-primary/20 transition-all shrink-0"
+        >
+          <Plus className="h-4 w-4" /> Add Signal
+        </button>
       </div>
 
       <div className="flex gap-3 flex-wrap">
@@ -164,7 +265,9 @@ export default function Signals() {
 
       {isLoading ? (
         <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-40 rounded-xl" />)}
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} className="h-40 rounded-xl" />
+          ))}
         </div>
       ) : (
         <div className="space-y-3">
@@ -172,7 +275,6 @@ export default function Signals() {
             <Card key={signal.id} className="border border-border hover:border-border/80 transition-all group">
               <CardContent className="py-4">
                 <div className="space-y-3">
-                  {/* Header row */}
                   <div className="flex items-start gap-3 flex-wrap">
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="outline" className={`text-xs shrink-0 ${strengthColor(signal.strength)}`}>
@@ -180,11 +282,13 @@ export default function Signals() {
                       </Badge>
                       {signal.action && (
                         <Badge variant="outline" className={`text-xs shrink-0 font-semibold ${actionColor(signal.action)}`}>
-                          <Zap className="h-2.5 w-2.5 mr-1" />{signal.action.replace(/_/g, " ")}
+                          <Zap className="h-2.5 w-2.5 mr-1" />
+                          {signal.action.replace(/_/g, " ")}
                         </Badge>
                       )}
                       <Badge variant="outline" className={`text-xs shrink-0 ${categoryColor(signal.category)}`}>
-                        <Tag className="h-2.5 w-2.5 mr-1" />{signal.category?.replace(/_/g, " ")}
+                        <Tag className="h-2.5 w-2.5 mr-1" />
+                        {signal.category?.replace(/_/g, " ")}
                       </Badge>
                       {signal.scope && (
                         <Badge variant="outline" className={`text-xs shrink-0 ${scopeColor(signal.scope)}`}>
@@ -197,7 +301,7 @@ export default function Signals() {
                         </Badge>
                       )}
                     </div>
-                    <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground shrink-0">
+                    <div className="ml-auto flex items-center gap-3 text-xs text-muted-foreground shrink-0 flex-wrap">
                       {signal.companyName && (
                         <span className="flex items-center gap-1">
                           <Building2 className="h-3 w-3" /> {signal.companyName}
@@ -207,16 +311,25 @@ export default function Signals() {
                       {signal.publishedDate && (
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          {new Date(signal.publishedDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                          {new Date(signal.publishedDate).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
                         </span>
                       )}
+                      <button
+                        onClick={() => handleAskAI(signal)}
+                        className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors font-medium"
+                        title="Analyze with AI"
+                      >
+                        <Bot className="h-3.5 w-3.5" /> Ask AI
+                      </button>
                     </div>
                   </div>
 
-                  {/* Summary */}
                   <p className="text-sm leading-relaxed font-medium">{signal.summary}</p>
 
-                  {/* Trajectory block */}
                   {(signal.pastState || signal.trajectoryDir) && (
                     <div className="flex items-start gap-2 bg-muted/20 border border-border/40 rounded px-3 py-2 text-xs">
                       <div className="flex items-center gap-1 shrink-0 mt-0.5">
@@ -227,13 +340,13 @@ export default function Signals() {
                       </div>
                       {signal.pastState && (
                         <p className="text-muted-foreground leading-snug">
-                          <span className="text-muted-foreground/60">Past: </span>{signal.pastState}
+                          <span className="text-muted-foreground/60">Past: </span>
+                          {signal.pastState}
                         </p>
                       )}
                     </div>
                   )}
 
-                  {/* Financial Impact */}
                   {signal.financialImpact && (
                     <div className="flex items-start gap-2 bg-emerald-500/5 border border-emerald-500/20 rounded px-3 py-2">
                       <DollarSign className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
@@ -241,7 +354,6 @@ export default function Signals() {
                     </div>
                   )}
 
-                  {/* SC Relevance */}
                   {signal.scRelevance && (
                     <div className="flex items-start gap-2 text-xs text-muted-foreground">
                       <TrendingUp className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
@@ -249,7 +361,6 @@ export default function Signals() {
                     </div>
                   )}
 
-                  {/* Source */}
                   {signal.source && (
                     <p className="text-xs text-muted-foreground border-t border-border/50 pt-2">
                       Source: {signal.source}
@@ -268,6 +379,167 @@ export default function Signals() {
           <p className="text-muted-foreground">No signals match your filters</p>
         </div>
       )}
+
+      {/* Add Signal Modal */}
+      <Dialog open={showAddModal} onOpenChange={(open) => { setShowAddModal(open); if (!open) { setFormData(EMPTY_FORM); setSubmitError(""); } }}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold font-mono">Add New Signal</DialogTitle>
+            <DialogDescription className="text-muted-foreground text-sm">
+              Capture a new intelligence signal for the tracker.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="space-y-1.5">
+              <label className="text-xs text-muted-foreground font-medium">Signal Summary *</label>
+              <textarea
+                rows={3}
+                placeholder="Describe the signal — what happened, what it means..."
+                value={formData.summary}
+                onChange={(e) => setFormData((p) => ({ ...p, summary: e.target.value }))}
+                className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground/60"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Category *</label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(v) => setFormData((p) => ({ ...p, category: v }))}
+                >
+                  <SelectTrigger className="bg-background border-border">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="SUPPLY_CHAIN">Supply Chain</SelectItem>
+                    <SelectItem value="PROCUREMENT">Procurement</SelectItem>
+                    <SelectItem value="DISTRIBUTION_GTM">Distribution / GTM</SelectItem>
+                    <SelectItem value="DIGITAL">Digital</SelectItem>
+                    <SelectItem value="ESG">ESG</SelectItem>
+                    <SelectItem value="MANUFACTURING">Manufacturing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Strength *</label>
+                <Select
+                  value={formData.strength}
+                  onValueChange={(v) => setFormData((p) => ({ ...p, strength: v }))}
+                >
+                  <SelectTrigger className="bg-background border-border">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="HIGH">High</SelectItem>
+                    <SelectItem value="MEDIUM">Medium</SelectItem>
+                    <SelectItem value="LOW">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Company</label>
+                <Input
+                  placeholder="e.g. HUL, Dabur, All FMCG"
+                  value={formData.companyName}
+                  onChange={(e) => setFormData((p) => ({ ...p, companyName: e.target.value }))}
+                  className="bg-background border-border"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Quarter</label>
+                <Input
+                  placeholder="e.g. Q4 FY25"
+                  value={formData.quarter}
+                  onChange={(e) => setFormData((p) => ({ ...p, quarter: e.target.value }))}
+                  className="bg-background border-border"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Recommended Action</label>
+                <Select
+                  value={formData.action}
+                  onValueChange={(v) => setFormData((p) => ({ ...p, action: v }))}
+                >
+                  <SelectTrigger className="bg-background border-border">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACT_NOW">Act Now</SelectItem>
+                    <SelectItem value="INVESTIGATE">Investigate</SelectItem>
+                    <SelectItem value="MONITOR">Monitor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground font-medium">Scope</label>
+                <Select
+                  value={formData.scope}
+                  onValueChange={(v) => setFormData((p) => ({ ...p, scope: v }))}
+                >
+                  <SelectTrigger className="bg-background border-border">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="COMPANY_SPECIFIC">Company Specific</SelectItem>
+                    <SelectItem value="INDUSTRY_WIDE">Industry Wide</SelectItem>
+                    <SelectItem value="MACRO">Macro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs text-muted-foreground font-medium">Financial Impact</label>
+              <textarea
+                rows={2}
+                placeholder="Estimated financial impact or opportunity size..."
+                value={formData.financialImpact}
+                onChange={(e) => setFormData((p) => ({ ...p, financialImpact: e.target.value }))}
+                className="w-full px-3 py-2 text-sm bg-background border border-border rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground/60"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs text-muted-foreground font-medium">Source</label>
+              <Input
+                placeholder="e.g. Q4 FY25 Earnings Call, Economic Times..."
+                value={formData.source}
+                onChange={(e) => setFormData((p) => ({ ...p, source: e.target.value }))}
+                className="bg-background border-border"
+              />
+            </div>
+
+            {submitError && (
+              <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded px-3 py-2">
+                {submitError}
+              </p>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleAddSignal}
+                disabled={submitting}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {submitting ? "Saving..." : "Save Signal"}
+              </button>
+              <button
+                onClick={() => { setShowAddModal(false); setFormData(EMPTY_FORM); setSubmitError(""); }}
+                className="px-4 py-2.5 rounded-lg bg-muted text-muted-foreground hover:text-foreground border border-border text-sm transition-all"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

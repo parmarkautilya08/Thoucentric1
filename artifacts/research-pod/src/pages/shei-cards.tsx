@@ -109,7 +109,7 @@ export default function SheiCards() {
       ) : (
         <div className="space-y-4">
           {filtered.map((card) => (
-            <Link key={card.id} href={`/shei-cards/${card.id}`}>
+            <Link key={card.id} href={`/shei-cards/${card.cardId}`}>
               <Card className="hover-elevate cursor-pointer border border-border hover:border-primary/50 transition-all duration-200 group">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4">

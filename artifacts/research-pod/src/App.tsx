@@ -17,6 +17,7 @@ import Actions from "@/pages/actions";
 import Ask from "@/pages/ask";
 import Timeline from "@/pages/timeline";
 import Feeds from "@/pages/feeds";
+import MeetingPrep from "@/pages/meeting-prep";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ function Router() {
         <Route path="/actions" component={Actions} />
         <Route path="/ask" component={Ask} />
         <Route path="/feeds" component={Feeds} />
+        <Route path="/meeting-prep" component={MeetingPrep} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

@@ -10,7 +10,11 @@ const parser = new Parser({
     "Accept": "application/rss+xml, application/xml, text/xml, */*",
   },
   customFields: {
-    item: [["media:content", "mediaContent"], ["dc:creator", "creator"]],
+    item: [
+      ["media:content", "mediaContent"],
+      ["dc:creator", "creator"],
+      ["source", "sourceInfo"],
+    ],
   },
 });
 
@@ -23,6 +27,17 @@ async function withCache<T>(key: string, fn: () => Promise<T>): Promise<T> {
   const data = await fn();
   cache.set(key, { data, ts: Date.now() });
   return data;
+}
+
+function getPublicationName(item: Record<string, unknown>, feedLabel: string): string {
+  const src = item.sourceInfo as Record<string, unknown> | string | undefined;
+  if (src) {
+    if (typeof src === "string" && src.trim()) return src.trim();
+    if (typeof src === "object" && src._ && typeof src._ === "string") return src._.trim();
+  }
+  const creator = item.creator as string | undefined;
+  if (creator && typeof creator === "string" && creator.trim()) return creator.trim();
+  return feedLabel;
 }
 
 const FEED_SOURCES = [
@@ -48,7 +63,7 @@ const FEED_SOURCES = [
     id: "nestle-india",
     label: "Nestlé India",
     category: "COMPANY",
-    url: "https://news.google.com/rss/search?q=%22Nestle+India%22+OR+%22Nestlé+India%22&hl=en-IN&gl=IN&ceid=IN:en",
+    url: "https://news.google.com/rss/search?q=%22Nestle+India%22+OR+%22Nestl%C3%A9+India%22&hl=en-IN&gl=IN&ceid=IN:en",
   },
   {
     id: "marico",
@@ -67,6 +82,36 @@ const FEED_SOURCES = [
     label: "Britannia",
     category: "COMPANY",
     url: "https://news.google.com/rss/search?q=Britannia+Industries+FMCG&hl=en-IN&gl=IN&ceid=IN:en",
+  },
+  {
+    id: "godrej-cp",
+    label: "Godrej CP",
+    category: "COMPANY",
+    url: "https://news.google.com/rss/search?q=%22Godrej+Consumer+Products%22+FMCG&hl=en-IN&gl=IN&ceid=IN:en",
+  },
+  {
+    id: "colgate-india",
+    label: "Colgate India",
+    category: "COMPANY",
+    url: "https://news.google.com/rss/search?q=%22Colgate+Palmolive+India%22+OR+%22Colgate+India%22&hl=en-IN&gl=IN&ceid=IN:en",
+  },
+  {
+    id: "reckitt-india",
+    label: "Reckitt India",
+    category: "COMPANY",
+    url: "https://news.google.com/rss/search?q=%22Reckitt+India%22+OR+%22Reckitt+Benckiser+India%22&hl=en-IN&gl=IN&ceid=IN:en",
+  },
+  {
+    id: "pg-india",
+    label: "P&G India",
+    category: "COMPANY",
+    url: "https://news.google.com/rss/search?q=%22Procter+%26+Gamble+India%22+OR+%22P%26G+India%22&hl=en-IN&gl=IN&ceid=IN:en",
+  },
+  {
+    id: "emami",
+    label: "Emami",
+    category: "COMPANY",
+    url: "https://news.google.com/rss/search?q=Emami+FMCG+India&hl=en-IN&gl=IN&ceid=IN:en",
   },
   {
     id: "fmcg-global",
@@ -112,7 +157,7 @@ async function fetchOneFeed(source: (typeof FEED_SOURCES)[0]): Promise<FeedArtic
       id: `${source.id}-${i}-${Date.now()}`,
       title: (item.title ?? "").replace(/<[^>]+>/g, "").trim(),
       link: item.link ?? "",
-      source: item.creator ?? (feed.title ?? source.label),
+      source: getPublicationName(item as Record<string, unknown>, source.label),
       feedLabel: source.label,
       category: source.category,
       publishedAt: item.isoDate ?? item.pubDate ?? new Date().toISOString(),
@@ -161,7 +206,7 @@ const COMMODITIES = [
     flag: "🍫",
   },
   {
-    symbol: "CPO=F",
+    symbol: "FCPO.KLS",
     name: "Palm Oil (CPO)",
     unit: "MYR/MT",
     relevance: "Soap, shampoo, edible oil — HUL, Marico, P&G India",
@@ -197,18 +242,21 @@ const COMMODITIES = [
   },
 ];
 
+const STALE_THRESHOLD_DAYS = 14;
+
 async function fetchCommodityChart(symbol: string): Promise<{
   price: number | null;
   prevClose: number | null;
   currency: string | null;
   marketTime: string | null;
+  isStale: boolean;
 }> {
   try {
-    const url = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2d`;
+    const url = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`;
     const resp = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0", "Accept": "application/json" },
     });
-    if (!resp.ok) return { price: null, prevClose: null, currency: null, marketTime: null };
+    if (!resp.ok) return { price: null, prevClose: null, currency: null, marketTime: null, isStale: false };
     const json = (await resp.json()) as {
       chart: {
         result: Array<{
@@ -222,16 +270,20 @@ async function fetchCommodityChart(symbol: string): Promise<{
       };
     };
     const meta = json.chart?.result?.[0]?.meta ?? {};
+    const marketTime = meta.regularMarketTime
+      ? new Date(meta.regularMarketTime * 1000).toISOString()
+      : null;
+    const ageMs = marketTime ? Date.now() - new Date(marketTime).getTime() : Infinity;
+    const isStale = ageMs > STALE_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
     return {
       price: meta.regularMarketPrice ?? null,
       prevClose: meta.chartPreviousClose ?? null,
       currency: meta.currency ?? null,
-      marketTime: meta.regularMarketTime
-        ? new Date(meta.regularMarketTime * 1000).toISOString()
-        : null,
+      marketTime,
+      isStale,
     };
   } catch {
-    return { price: null, prevClose: null, currency: null, marketTime: null };
+    return { price: null, prevClose: null, currency: null, marketTime: null, isStale: false };
   }
 }
 
@@ -242,7 +294,7 @@ router.get("/feeds/commodities", async (_req, res) => {
       return COMMODITIES.map((c, i) => {
         const q = quotes[i];
         const change =
-          q.price != null && q.prevClose != null ? q.price - q.prevClose : null;
+          q.price != null && q.prevClose != null && !q.isStale ? q.price - q.prevClose : null;
         const changePct =
           change != null && q.prevClose != null && q.prevClose !== 0
             ? (change / q.prevClose) * 100
@@ -254,6 +306,7 @@ router.get("/feeds/commodities", async (_req, res) => {
           changePct: changePct != null ? changePct.toFixed(2) : null,
           currency: q.currency,
           marketTime: q.marketTime,
+          isStale: q.isStale,
         };
       });
     });

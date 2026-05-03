@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
-import { BarChart2, TrendingUp, TrendingDown, Minus, ChevronRight, X, Building2, Lightbulb, Target, AlertCircle, ArrowRight } from "lucide-react";
+import { BarChart2, TrendingUp, TrendingDown, Minus, ChevronRight, X, Building2, Lightbulb, Target, AlertCircle, ArrowRight, Bot } from "lucide-react";
+import { Link, useLocation } from "wouter";
 
 const FUNCTION_LABELS: Record<string, string> = {
   SUPPLY_CHAIN_PLANNING: "Supply Chain Planning",
@@ -34,9 +35,41 @@ const functionColor: Record<string, string> = {
 };
 
 function BenchmarkDrillDown({ benchmark, onClose }: { benchmark: any; onClose: () => void }) {
+  const [, navigate] = useLocation();
   if (!benchmark) return null;
 
   const companyLines = benchmark.companyExamples?.split("\n").filter(Boolean) ?? [];
+
+  function handleAskAI() {
+    const prompt = `Deep-dive analysis of FMCG benchmark KPI: ${benchmark.kpiName}
+
+Definition: ${benchmark.definition ?? "N/A"}
+Function: ${benchmark.functionTag?.replace(/_/g, " ")}
+
+Performance Tiers:
+- Best-in-Class: ${benchmark.bestInClass} ${benchmark.unit ?? ""}
+- Industry Median: ${benchmark.industryMedian} ${benchmark.unit ?? ""}
+- Laggard: ${benchmark.laggard} ${benchmark.unit ?? ""}
+Source Period: ${benchmark.sourcePeriod ?? "N/A"}
+
+India Context: ${benchmark.indiaContext ?? "N/A"}
+Why It Matters: ${benchmark.whyItMatters ?? "N/A"}
+Consulting Angle: ${benchmark.consultingAngle ?? "N/A"}
+Improvement Levers: ${benchmark.improvementLevers ?? "N/A"}
+
+Company Examples:
+${benchmark.companyExamples ?? "N/A"}
+
+Please:
+1. Which India FMCG companies are most exposed to this performance gap?
+2. What is the consulting opportunity size for Thoucentric in this space?
+3. What are the most effective improvement levers ranked by ROI?
+4. How does this KPI connect to financial outcomes (revenue, EBITDA, working capital)?
+5. Write a one-paragraph pitch to a CSCO about this benchmark gap.`;
+
+    sessionStorage.setItem("rp_ask_prefill", prompt);
+    navigate("/ask");
+  }
 
   return (
     <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-border">
@@ -153,12 +186,27 @@ function BenchmarkDrillDown({ benchmark, onClose }: { benchmark: any; onClose: (
           </div>
         )}
 
+        {/* Ask AI button */}
+        <div className="border-t border-border pt-3">
+          <button
+            onClick={handleAskAI}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary border border-primary/30 text-xs font-medium hover:bg-primary/20 transition-all"
+          >
+            <Bot className="h-3.5 w-3.5" /> Analyze This KPI with AI
+          </button>
+        </div>
+
         {/* SHEI Link */}
         {benchmark.sheiAnnotation && (
           <div className="border-t border-border pt-3">
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <AlertCircle className="h-3 w-3 text-amber-400" />
-              Linked SHEI hypothesis: <span className="font-mono text-primary">{benchmark.sheiAnnotation}</span>
+              Linked SHEI hypothesis:{" "}
+              <Link href={`/shei-cards/${benchmark.sheiAnnotation}`}>
+                <span className="font-mono text-primary hover:underline cursor-pointer">
+                  {benchmark.sheiAnnotation}
+                </span>
+              </Link>
             </p>
           </div>
         )}

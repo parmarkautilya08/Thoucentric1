@@ -52,16 +52,26 @@ router.post("/companies", async (req, res) => {
 });
 
 router.get("/companies/:id", async (req, res) => {
-  const params = GetCompanyParams.safeParse({ id: Number(req.params.id) });
-  if (!params.success) {
-    res.status(400).json({ error: "Invalid id" });
-    return;
-  }
+  const rawId = req.params.id;
+  const numId = Number(rawId);
 
-  const [company] = await db
-    .select()
-    .from(companiesTable)
-    .where(eq(companiesTable.id, params.data.id));
+  let company;
+  if (!isNaN(numId) && Number.isInteger(numId) && numId > 0) {
+    const params = GetCompanyParams.safeParse({ id: numId });
+    if (!params.success) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+    [company] = await db
+      .select()
+      .from(companiesTable)
+      .where(eq(companiesTable.id, params.data.id));
+  } else {
+    [company] = await db
+      .select()
+      .from(companiesTable)
+      .where(eq(companiesTable.name, rawId));
+  }
 
   if (!company) {
     res.status(404).json({ error: "Company not found" });
