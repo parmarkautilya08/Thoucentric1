@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Send, Bot, User, Lightbulb, ChevronRight, RotateCcw, Globe } from "lucide-react";
+import { Send, Bot, User, Lightbulb, ChevronRight, RotateCcw, Globe, Rss, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const STARTER_QUESTIONS = [
@@ -27,8 +27,18 @@ export default function Ask() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [prefillBanner, setPrefillBanner] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    const prefill = sessionStorage.getItem("rp_ask_prefill");
+    if (prefill) {
+      sessionStorage.removeItem("rp_ask_prefill");
+      setInput(prefill);
+      setPrefillBanner("Loaded from Live Feed — review and send, or edit below");
+    }
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -167,6 +177,17 @@ export default function Ask() {
           </button>
         )}
       </div>
+
+      {/* Prefill banner */}
+      {prefillBanner && (
+        <div className="mb-4 shrink-0 flex items-center gap-2 text-xs bg-primary/10 border border-primary/30 rounded-lg px-3 py-2 text-primary">
+          <Rss className="h-3.5 w-3.5 shrink-0" />
+          <span className="flex-1">{prefillBanner}</span>
+          <button onClick={() => setPrefillBanner(null)} className="hover:opacity-70">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Starter Questions */}
       {messages.length === 0 && (

@@ -16,6 +16,7 @@ import Playbooks from "@/pages/playbooks";
 import Actions from "@/pages/actions";
 import Ask from "@/pages/ask";
 import Timeline from "@/pages/timeline";
+import Feeds from "@/pages/feeds";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ function Router() {
         <Route path="/playbooks" component={Playbooks} />
         <Route path="/actions" component={Actions} />
         <Route path="/ask" component={Ask} />
+        <Route path="/feeds" component={Feeds} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

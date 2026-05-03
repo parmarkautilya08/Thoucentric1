@@ -11,6 +11,7 @@ import {
   Zap,
   MessageCircle,
   Clock,
+  Rss,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -28,6 +29,7 @@ const NAV_SECTIONS = [
     items: [
       { href: "/signals", label: "Signal Tracker", icon: Activity },
       { href: "/timeline", label: "Timeline", icon: Clock },
+      { href: "/feeds", label: "Live Feed", icon: Rss },
     ],
   },
   {
@@ -106,6 +108,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         )}
                         {item.href === "/actions" && (
                           <span className="ml-auto text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-mono">NEW</span>
+                        )}
+                        {item.href === "/feeds" && (
+                          <span className="ml-auto text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-mono">RSS</span>
                         )}
                       </div>
                     </Link>

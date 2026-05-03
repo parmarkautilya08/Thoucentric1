@@ -8,6 +8,7 @@ import playbooksRouter from "./playbooks";
 import dashboardRouter from "./dashboard";
 import adminRouter from "./admin";
 import askRouter from "./ask";
+import feedsRouter from "./feeds";
 
 const router: IRouter = Router();
 
@@ -20,5 +21,6 @@ router.use(playbooksRouter);
 router.use(dashboardRouter);
 router.use(adminRouter);
 router.use(askRouter);
+router.use(feedsRouter);
 
 export default router;
