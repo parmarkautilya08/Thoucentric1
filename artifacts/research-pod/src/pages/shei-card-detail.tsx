@@ -10,11 +10,13 @@ import {
 
 const functionLabels: Record<string, string> = {
   SUPPLY_CHAIN: "Supply Chain",
+  PROCUREMENT: "Procurement",
+  DISTRIBUTION_GTM: "Distribution & GTM",
   IT_TECHNOLOGY: "Technology",
   SALES_DISTRIBUTION: "Sales & Distribution",
   FINANCIAL: "Financial",
-  CATEGORY: "Category",
-  PROCUREMENT: "Procurement",
+  ESG: "ESG",
+  MANUFACTURING: "Manufacturing",
 };
 
 const FRAMEWORK = [

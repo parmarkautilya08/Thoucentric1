@@ -9,9 +9,8 @@ import { Layers, ChevronRight, TrendingUp, DollarSign, Clock } from "lucide-reac
 
 const statusColor = (status?: string | null) => {
   switch (status) {
-    case "CONFIRMED": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
     case "ACTIVE": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-    case "MONITORING": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+    case "INVESTIGATING": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
     case "CLOSED": return "bg-muted text-muted-foreground";
     default: return "";
   }
@@ -28,11 +27,13 @@ const urgencyColor = (urgency?: string | null) => {
 
 const functionLabels: Record<string, string> = {
   SUPPLY_CHAIN: "Supply Chain",
+  PROCUREMENT: "Procurement",
+  DISTRIBUTION_GTM: "Distribution & GTM",
   IT_TECHNOLOGY: "Technology",
   SALES_DISTRIBUTION: "Sales & Distribution",
   FINANCIAL: "Financial",
-  CATEGORY: "Category",
-  PROCUREMENT: "Procurement",
+  ESG: "ESG",
+  MANUFACTURING: "Manufacturing",
 };
 
 const FRAMEWORK_LABELS: Record<string, string> = {
@@ -73,8 +74,7 @@ export default function SheiCards() {
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
-            <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-            <SelectItem value="MONITORING">Monitoring</SelectItem>
+            <SelectItem value="INVESTIGATING">Investigating</SelectItem>
             <SelectItem value="CLOSED">Closed</SelectItem>
           </SelectContent>
         </Select>

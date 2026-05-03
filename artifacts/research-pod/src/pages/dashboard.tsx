@@ -7,7 +7,7 @@ import { Link } from "wouter";
 
 const urgencyColor = (u?: string) => {
   if (u === "IMMEDIATE") return "bg-red-500/20 text-red-400 border-red-500/30";
-  if (u === "SHORT_TERM") return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+  if (u === "MEDIUM_TERM") return "bg-amber-500/20 text-amber-400 border-amber-500/30";
   return "bg-blue-500/20 text-blue-400 border-blue-500/30";
 };
 

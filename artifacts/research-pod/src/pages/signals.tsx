@@ -17,15 +17,12 @@ const strengthColor = (s?: string) => {
 
 const categoryColor = (c?: string) => {
   switch (c) {
-    case "EARNINGS": return "bg-purple-500/20 text-purple-400 border-purple-500/30";
-    case "PROCUREMENT": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
     case "SUPPLY_CHAIN": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-    case "TECHNOLOGY": return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
-    case "REGULATORY": return "bg-red-500/20 text-red-400 border-red-500/30";
-    case "DISRUPTION": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+    case "PROCUREMENT": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
     case "DISTRIBUTION_GTM": return "bg-violet-500/20 text-violet-400 border-violet-500/30";
-    case "MACRO": return "bg-green-500/20 text-green-400 border-green-500/30";
-    case "STRATEGY": return "bg-indigo-500/20 text-indigo-400 border-indigo-500/30";
+    case "DIGITAL": return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
+    case "ESG": return "bg-green-500/20 text-green-400 border-green-500/30";
+    case "MANUFACTURING": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
     default: return "";
   }
 };
@@ -144,13 +141,12 @@ export default function Signals() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="PROCUREMENT">Procurement</SelectItem>
             <SelectItem value="SUPPLY_CHAIN">Supply Chain</SelectItem>
+            <SelectItem value="PROCUREMENT">Procurement</SelectItem>
             <SelectItem value="DISTRIBUTION_GTM">Distribution / GTM</SelectItem>
-            <SelectItem value="TECHNOLOGY">Technology</SelectItem>
-            <SelectItem value="REGULATORY">Regulatory</SelectItem>
-            <SelectItem value="DISRUPTION">Disruption</SelectItem>
-            <SelectItem value="MACRO">Macro</SelectItem>
+            <SelectItem value="DIGITAL">Digital</SelectItem>
+            <SelectItem value="ESG">ESG</SelectItem>
+            <SelectItem value="MANUFACTURING">Manufacturing</SelectItem>
           </SelectContent>
         </Select>
         <Select value={scopeFilter} onValueChange={setScopeFilter}>
