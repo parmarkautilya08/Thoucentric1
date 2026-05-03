@@ -7,10 +7,7 @@ import {
   playbookSectionsTable,
 } from "@workspace/db";
 
-export async function seedDatabase(force = false) {
-  const existingCompanies = await db.select().from(companiesTable);
-  if (existingCompanies.length >= 15 && !force) return;
-
+export async function seedDatabase() {
   // Clear all existing data
   await db.delete(signalsTable);
   await db.delete(sheiCardsTable);

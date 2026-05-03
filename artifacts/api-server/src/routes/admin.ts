@@ -5,7 +5,7 @@ const router = Router();
 
 router.post("/admin/reseed", async (_req, res) => {
   try {
-    await seedDatabase(true);
+    await seedDatabase();
     res.json({ success: true, message: "Database re-seeded successfully" });
   } catch (err) {
     res.status(500).json({ success: false, message: String(err) });
