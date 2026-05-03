@@ -35,4 +35,10 @@ title = "Master Prompt v4.0 — Industry Research Pod (with Live Feed Module)"
 id = "irK9FgwADdHU3OsldE2hH"
 uri = "file://exports/Industry_Research_Pod_Deliverables.zip"
 type = "unspecified"
-title = "Industry Research Pod — Build Log (.docx) + Screenshot Gallery (.html) + All 13 Screenshots"
+title = "Complete Deliverables Package (Build Log + Blueprint + Screenshots)"
+
+[[outputs]]
+id = "tioMe5pkdi-dnjnC0uuyO"
+uri = "file://exports/Industry_Research_Pod_Technical_Blueprint.docx"
+type = "word_document"
+title = "Industry Research Pod — Full Technical Blueprint (.docx)"

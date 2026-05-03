@@ -1,0 +1,168 @@
+You are a senior software architect and systems engineer.
+
+Your task is to generate a COMPLETE, REPRODUCIBLE EXPORT of this entire application so it can be rebuilt from scratch on any environment (local machine, enterprise AI platform, or cloud).
+
+Do NOT summarize. Do NOT skip anything. Output EVERYTHING required.
+
+---
+
+# OBJECTIVE
+
+Create a FULL SYSTEM DOCUMENTATION + CODE EXPORT PACKAGE for this app.
+
+The output must allow a developer (or AI) to rebuild this app EXACTLY as-is without access to this Replit environment.
+
+---
+
+# OUTPUT STRUCTURE (MANDATORY)
+
+Organize everything into clearly separated sections:
+
+---
+
+## 1. PROJECT OVERVIEW
+
+* What this app does
+* Core modules
+* High-level architecture
+
+---
+
+## 2. COMPLETE FILE TREE
+
+Provide full directory structure:
+
+Example:
+
+* /frontend
+* /backend
+* /api
+* /db
+* /prompts
+* /config
+
+Include ALL files.
+
+---
+
+## 3. FULL SOURCE CODE
+
+For EACH file:
+
+* Provide full code (no truncation)
+* Include:
+
+  * Frontend
+  * Backend
+  * API routes
+  * AI integration logic
+  * Data processing
+
+---
+
+## 4. DATABASE SCHEMA
+
+List ALL tables with:
+
+* Table name
+* Fields
+* Data types
+* Relationships
+
+Also include:
+
+* Sample records (if possible)
+
+---
+
+## 5. PROMPT SYSTEM
+
+Extract ALL prompts used in the app:
+
+* Master system prompt
+* Signal processing prompt
+* SHEI generation prompt
+* KPI validation prompt
+* Final response prompt
+
+---
+
+## 6. DATA PIPELINE & AUTOMATION
+
+Explain step-by-step:
+
+* How signals are ingested
+* How they are processed
+* How SHEI is generated
+* How data flows between tables
+
+---
+
+## 7. KNOWLEDGE GRAPH LOGIC
+
+Describe:
+
+* Entities (Company, Signal, SHEI, KPI)
+* Relationships between them
+* How linking works
+
+---
+
+## 8. ENVIRONMENT CONFIGURATION
+
+Provide:
+
+* Required environment variables
+* API keys structure (use placeholders)
+* Dependencies (package.json / requirements.txt)
+
+---
+
+## 9. SETUP GUIDE (CRITICAL)
+
+Write a step-by-step guide:
+
+### Local Setup
+
+* Install dependencies
+* Run backend
+* Run frontend
+
+### Deployment
+
+* How to deploy on:
+
+  * Local machine
+  * Cloud (optional)
+
+---
+
+## 10. EXECUTION FLOW
+
+Explain:
+
+User → API → AI → DB → Response
+
+---
+
+# RULES
+
+* DO NOT omit any file
+* DO NOT summarize code
+* DO NOT assume prior knowledge
+* Make it fully reproducible
+* Use clean formatting
+
+---
+
+# FINAL OUTPUT
+
+The result must be:
+
+A COMPLETE TECHNICAL BLUEPRINT + CODEBASE that can recreate this app 1:1 anywhere.
+
+If anything is missing → system is considered failed.
+
+---
+
+Start now.
