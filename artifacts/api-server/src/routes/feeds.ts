@@ -157,7 +157,7 @@ async function fetchOneFeed(source: (typeof FEED_SOURCES)[0]): Promise<FeedArtic
       id: `${source.id}-${i}-${Date.now()}`,
       title: (item.title ?? "").replace(/<[^>]+>/g, "").trim(),
       link: item.link ?? "",
-      source: getPublicationName(item as Record<string, unknown>, source.label),
+      source: getPublicationName(item as unknown as Record<string, unknown>, source.label),
       feedLabel: source.label,
       category: source.category,
       publishedAt: item.isoDate ?? item.pubDate ?? new Date().toISOString(),
