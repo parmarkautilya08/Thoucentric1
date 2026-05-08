@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: thoucentric1
+    runtime: node
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @workspace/db push-force && pnpm --filter @workspace/research-pod build && pnpm --filter @workspace/api-server build
+    startCommand: cd artifacts/api-server && pnpm start
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: NODE_ENV
+        value: production
+      - key: BASE_PATH
+        value: /
+      - key: AI_INTEGRATIONS_OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: AI_INTEGRATIONS_OPENAI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: thoucentric1-db
+          property: connectionString
+
+databases:
+  - name: thoucentric1-db
+    plan: free
