@@ -2,8 +2,12 @@ import { useGetDashboardSummary, useListSignals, useListSheiCards } from "@works
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Building2, Layers, Activity, BarChart2, BookOpen, ChevronRight, TrendingUp, AlertTriangle } from "lucide-react";
+import {
+  Building2, Layers, Activity, BarChart2, BookOpen, ChevronRight,
+  TrendingUp, AlertTriangle, Presentation, Target, Zap
+} from "lucide-react";
 import { Link } from "wouter";
+import { usePresentationStore } from "@/lib/presentation-store";
 
 const urgencyColor = (u?: string) => {
   if (u === "IMMEDIATE") return "bg-red-500/20 text-red-400 border-red-500/30";
@@ -33,6 +37,106 @@ export default function Dashboard() {
           {[1, 2, 3, 4, 5].map((i) => (
             <Skeleton key={i} className="h-32 rounded-xl" />
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  const isExecutive = usePresentationStore(s => s.isExecutiveView);
+
+  if (isExecutive) {
+    return (
+      <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 max-w-5xl mx-auto">
+        <div className="text-center py-6">
+          <Badge variant="outline" className="mb-4 border-primary text-primary px-3 py-1 font-mono uppercase tracking-widest text-xs">
+            Executive Strategy Briefing
+          </Badge>
+          <h1 className="text-5xl font-black tracking-tight mb-4">FMCG Industry Intelligence</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto italic">
+            "Signal-to-Insight engine for Thoucentric Senior Leadership & Partners"
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-primary/5 border-primary/20 p-6 flex flex-col items-center text-center space-y-4">
+             <Target className="h-10 w-10 text-primary" />
+             <div>
+                <h3 className="text-xl font-bold uppercase tracking-tight">Market Outlook</h3>
+                <p className="text-sm text-muted-foreground">High-growth premiumization & Shrinkflation dynamics</p>
+             </div>
+             <Link href="/signals" className="mt-auto">
+                <button className="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+                  MARKET SIGNALS <ChevronRight className="h-3 w-3" />
+                </button>
+             </Link>
+          </Card>
+
+          <Card className="bg-amber-500/5 border-amber-500/20 p-6 flex flex-col items-center text-center space-y-4">
+             <Zap className="h-10 w-10 text-amber-400" />
+             <div>
+                <h3 className="text-xl font-bold uppercase tracking-tight">Active Hypotheses</h3>
+                <p className="text-sm text-muted-foreground">{summary?.totalSheiCards || 0} Strategic SHEI cards active</p>
+             </div>
+             <Link href="/shei-cards" className="mt-auto">
+                <button className="text-xs font-bold text-amber-400 flex items-center gap-1 hover:underline">
+                  STRATEGY CARDS <ChevronRight className="h-3 w-3" />
+                </button>
+             </Link>
+          </Card>
+
+          <Card className="bg-emerald-500/5 border-emerald-500/20 p-6 flex flex-col items-center text-center space-y-4">
+             <Presentation className="h-10 w-10 text-emerald-400" />
+             <div>
+                <h3 className="text-xl font-bold uppercase tracking-tight">BD Opportunities</h3>
+                <p className="text-sm text-muted-foreground">Top consulting entry points for May 2026</p>
+             </div>
+             <Link href="/actions" className="mt-auto">
+                <button className="text-xs font-bold text-emerald-400 flex items-center gap-1 hover:underline">
+                  VIEW OPPORTUNITIES <ChevronRight className="h-3 w-3" />
+                </button>
+             </Link>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+           <div className="space-y-4">
+              <h2 className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-widest border-b border-border pb-2">Priority Account Status</h2>
+              <div className="space-y-3">
+                 {urgentCards.slice(0, 4).map(card => (
+                   <Link key={card.id} href={`/shei-cards/${card.cardId}`}>
+                    <div className="p-4 rounded-xl border border-border bg-card/50 hover:bg-accent/10 cursor-pointer transition-all">
+                       <div className="flex justify-between items-start mb-2">
+                          <Badge variant="outline" className={urgencyColor(card.urgency)}>{card.urgency}</Badge>
+                          <span className="text-[10px] font-mono text-muted-foreground">{card.cardId}</span>
+                       </div>
+                       <p className="font-bold leading-tight">{card.title}</p>
+                    </div>
+                   </Link>
+                 ))}
+              </div>
+           </div>
+
+           <div className="space-y-4">
+              <h2 className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-widest border-b border-border pb-2">Key Value Metrics</h2>
+              <div className="grid grid-cols-2 gap-4">
+                 <div className="p-4 rounded-xl border border-border bg-card/50">
+                    <div className="text-3xl font-black text-primary">{summary?.totalCompanies || 0}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Tracked Companies</div>
+                 </div>
+                 <div className="p-4 rounded-xl border border-border bg-card/50">
+                    <div className="text-3xl font-black text-amber-400">{summary?.totalSignals || 0}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Market Signals</div>
+                 </div>
+                 <div className="p-4 rounded-xl border border-border bg-card/50">
+                    <div className="text-3xl font-black text-emerald-400">{summary?.totalBenchmarks || 0}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">KPI Benchmarks</div>
+                 </div>
+                 <div className="p-4 rounded-xl border border-border bg-card/50">
+                    <div className="text-3xl font-black text-sky-400">{summary?.totalPlaybookSections || 0}</div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">BD Playbooks</div>
+                 </div>
+              </div>
+           </div>
         </div>
       </div>
     );

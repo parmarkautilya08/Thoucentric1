@@ -206,6 +206,10 @@ export const ListSheiCardsResponseItem = zod.object({
   financialImpact: zod.string().optional(),
   whyNow: zod.string().optional(),
   relatedCompanies: zod.string().optional(),
+  contradictions: zod.string().optional(),
+  kpiLinkage: zod.string().optional(),
+  signalCluster: zod.string().optional(),
+  trajectoryContext: zod.string().optional(),
   version: zod.string(),
   nextReview: zod.string().optional(),
   createdAt: zod.string(),
@@ -278,6 +282,10 @@ export const GetSheiCardResponse = zod.object({
   financialImpact: zod.string().optional(),
   whyNow: zod.string().optional(),
   relatedCompanies: zod.string().optional(),
+  contradictions: zod.string().optional(),
+  kpiLinkage: zod.string().optional(),
+  signalCluster: zod.string().optional(),
+  trajectoryContext: zod.string().optional(),
   version: zod.string(),
   nextReview: zod.string().optional(),
   createdAt: zod.string(),
@@ -346,6 +354,10 @@ export const UpdateSheiCardResponse = zod.object({
   financialImpact: zod.string().optional(),
   whyNow: zod.string().optional(),
   relatedCompanies: zod.string().optional(),
+  contradictions: zod.string().optional(),
+  kpiLinkage: zod.string().optional(),
+  signalCluster: zod.string().optional(),
+  trajectoryContext: zod.string().optional(),
   version: zod.string(),
   nextReview: zod.string().optional(),
   createdAt: zod.string(),
@@ -385,13 +397,7 @@ export const ListSignalsResponseItem = zod.object({
   ]),
   summary: zod.string(),
   strength: zod.enum(["HIGH", "MEDIUM", "LOW"]),
-  action: zod.enum([
-    "UPDATE_CARD",
-    "SHEI_CANDIDATE",
-    "DISRUPTION_BRIEF",
-    "MONITOR",
-    "NO_ACTION",
-  ]),
+  action: zod.enum(["ACT_NOW", "INVESTIGATE", "MONITOR", "NO_ACTION"]),
   source: zod.string().optional(),
   eventType: zod
     .enum([
@@ -411,6 +417,9 @@ export const ListSignalsResponseItem = zod.object({
   newsUrl: zod.string().optional(),
   quarter: zod.string().optional(),
   scRelevance: zod.string().optional(),
+  scope: zod.string().optional(),
+  pastState: zod.string().optional(),
+  trajectoryDir: zod.string().optional(),
   createdAt: zod.string(),
 });
 export const ListSignalsResponse = zod.array(ListSignalsResponseItem);
@@ -430,16 +439,11 @@ export const CreateSignalBody = zod.object({
     "REGULATORY",
     "DISRUPTION",
     "MACRO",
+    "PROCUREMENT",
   ]),
   summary: zod.string(),
   strength: zod.enum(["HIGH", "MEDIUM", "LOW"]),
-  action: zod.enum([
-    "UPDATE_CARD",
-    "SHEI_CANDIDATE",
-    "DISRUPTION_BRIEF",
-    "MONITOR",
-    "NO_ACTION",
-  ]),
+  action: zod.enum(["ACT_NOW", "INVESTIGATE", "MONITOR", "NO_ACTION"]),
   source: zod.string().optional(),
 });
 
@@ -473,6 +477,7 @@ export const ListBenchmarksResponseItem = zod.object({
   whyItMatters: zod.string().optional(),
   consultingAngle: zod.string().optional(),
   improvementLevers: zod.string().optional(),
+  calculationLogic: zod.string().optional(),
   version: zod.string(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -541,6 +546,7 @@ export const UpdateBenchmarkResponse = zod.object({
   whyItMatters: zod.string().optional(),
   consultingAngle: zod.string().optional(),
   improvementLevers: zod.string().optional(),
+  calculationLogic: zod.string().optional(),
   version: zod.string(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
@@ -675,13 +681,7 @@ export const GetRecentSignalsResponseItem = zod.object({
   ]),
   summary: zod.string(),
   strength: zod.enum(["HIGH", "MEDIUM", "LOW"]),
-  action: zod.enum([
-    "UPDATE_CARD",
-    "SHEI_CANDIDATE",
-    "DISRUPTION_BRIEF",
-    "MONITOR",
-    "NO_ACTION",
-  ]),
+  action: zod.enum(["ACT_NOW", "INVESTIGATE", "MONITOR", "NO_ACTION"]),
   source: zod.string().optional(),
   eventType: zod
     .enum([
@@ -701,6 +701,9 @@ export const GetRecentSignalsResponseItem = zod.object({
   newsUrl: zod.string().optional(),
   quarter: zod.string().optional(),
   scRelevance: zod.string().optional(),
+  scope: zod.string().optional(),
+  pastState: zod.string().optional(),
+  trajectoryDir: zod.string().optional(),
   createdAt: zod.string(),
 });
 export const GetRecentSignalsResponse = zod.array(GetRecentSignalsResponseItem);

@@ -153,7 +153,7 @@ interface FeedArticle {
 async function fetchOneFeed(source: (typeof FEED_SOURCES)[0]): Promise<FeedArticle[]> {
   try {
     const feed = await parser.parseURL(source.url);
-    return (feed.items ?? []).slice(0, 8).map((item, i) => ({
+    return (feed.items ?? []).slice(0, 25).map((item, i) => ({
       id: `${source.id}-${i}-${Date.now()}`,
       title: (item.title ?? "").replace(/<[^>]+>/g, "").trim(),
       link: item.link ?? "",
@@ -164,7 +164,7 @@ async function fetchOneFeed(source: (typeof FEED_SOURCES)[0]): Promise<FeedArtic
       summary: (item.contentSnippet ?? item.summary ?? "")
         .replace(/<[^>]+>/g, "")
         .trim()
-        .slice(0, 240),
+        .slice(0, 1000),
     }));
   } catch {
     return [];

@@ -676,6 +676,14 @@ components:
           type: string
         relatedCompanies:
           type: string
+        contradictions:
+          type: string
+        kpiLinkage:
+          type: string
+        signalCluster:
+          type: string
+        trajectoryContext:
+          type: string
         version:
           type: string
         nextReview:
@@ -752,7 +760,7 @@ components:
           enum: [HIGH, MEDIUM, LOW]
         action:
           type: string
-          enum: [UPDATE_CARD, SHEI_CANDIDATE, DISRUPTION_BRIEF, MONITOR, NO_ACTION]
+          enum: [ACT_NOW, INVESTIGATE, MONITOR, NO_ACTION]
         source:
           type: string
         eventType:
@@ -768,6 +776,12 @@ components:
           type: string
         scRelevance:
           type: string
+        scope:
+          type: string
+        pastState:
+          type: string
+        trajectoryDir:
+          type: string
         createdAt:
           type: string
       required: [id, category, summary, strength, action, createdAt]
@@ -781,7 +795,7 @@ components:
           type: string
         category:
           type: string
-          enum: [EARNINGS, STRATEGY, SUPPLY_CHAIN, TECHNOLOGY, LEADERSHIP, REGULATORY, DISRUPTION, MACRO]
+          enum: [EARNINGS, STRATEGY, SUPPLY_CHAIN, TECHNOLOGY, LEADERSHIP, REGULATORY, DISRUPTION, MACRO, PROCUREMENT]
         summary:
           type: string
         strength:
@@ -789,7 +803,7 @@ components:
           enum: [HIGH, MEDIUM, LOW]
         action:
           type: string
-          enum: [UPDATE_CARD, SHEI_CANDIDATE, DISRUPTION_BRIEF, MONITOR, NO_ACTION]
+          enum: [ACT_NOW, INVESTIGATE, MONITOR, NO_ACTION]
         source:
           type: string
       required: [category, summary, strength, action]
@@ -826,6 +840,8 @@ components:
         consultingAngle:
           type: string
         improvementLevers:
+          type: string
+        calculationLogic:
           type: string
         version:
           type: string

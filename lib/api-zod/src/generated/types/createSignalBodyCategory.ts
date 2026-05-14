@@ -18,4 +18,5 @@ export const CreateSignalBodyCategory = {
   REGULATORY: "REGULATORY",
   DISRUPTION: "DISRUPTION",
   MACRO: "MACRO",
+  PROCUREMENT: "PROCUREMENT",
 } as const;

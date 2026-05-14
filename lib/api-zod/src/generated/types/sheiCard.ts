@@ -29,6 +29,10 @@ export interface SheiCard {
   financialImpact?: string;
   whyNow?: string;
   relatedCompanies?: string;
+  contradictions?: string;
+  kpiLinkage?: string;
+  signalCluster?: string;
+  trajectoryContext?: string;
   version: string;
   nextReview?: string;
   createdAt: string;

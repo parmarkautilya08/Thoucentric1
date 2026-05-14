@@ -25,5 +25,8 @@ export interface Signal {
   newsUrl?: string;
   quarter?: string;
   scRelevance?: string;
+  scope?: string;
+  pastState?: string;
+  trajectoryDir?: string;
   createdAt: string;
 }
