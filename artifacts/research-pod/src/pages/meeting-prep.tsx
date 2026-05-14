@@ -30,15 +30,15 @@ export default function MeetingPrep() {
   const { data: sheiCards } = useListSheiCards();
   const { data: signals } = useListSignals();
 
-  const selectedCompany = (companies ?? []).find((c) => c.name === company);
+  const selectedCompany = Array.isArray(companies) ? companies : [].find((c) => c.name === company);
 
-  const linkedShei = (sheiCards ?? []).filter(
+  const linkedShei = Array.isArray(sheiCards) ? sheiCards : [].filter(
     (s) =>
       selectedCompany &&
       s.relatedCompanies?.toLowerCase().includes(selectedCompany.name.toLowerCase())
   );
 
-  const linkedSignals = (signals ?? []).filter(
+  const linkedSignals = Array.isArray(signals) ? signals : [].filter(
     (s) =>
       selectedCompany &&
       (s.companyName?.toLowerCase().includes(selectedCompany.name.toLowerCase()) ||
@@ -209,7 +209,7 @@ Be specific, concise, and use the intelligence data above. Avoid generic stateme
                   <SelectValue placeholder="Select company..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-64 overflow-y-auto">
-                  {(companies ?? []).map((c) => (
+                  {Array.isArray(companies) ? companies : [].map((c) => (
                     <SelectItem key={c.name} value={c.name}>
                       {c.name} — {c.fullName}
                     </SelectItem>

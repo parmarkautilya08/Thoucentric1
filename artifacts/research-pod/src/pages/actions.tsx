@@ -42,11 +42,11 @@ export default function Actions() {
 
   const isLoading = sheiLoading || signalsLoading;
 
-  const sortedCards = [...(sheiCards ?? [])].sort(
+  const sortedCards = [...Array.isArray(sheiCards) ? sheiCards : []].sort(
     (a, b) => (urgencyRank[a.urgency ?? ""] ?? 99) - (urgencyRank[b.urgency ?? ""] ?? 99)
   );
 
-  const highSignals = (signals ?? []).filter((s) => s.strength === "HIGH" && (s.action === "ACT_NOW" || s.action === "INVESTIGATE"));
+  const highSignals = Array.isArray(signals) ? signals : [].filter((s) => s.strength === "HIGH" && (s.action === "ACT_NOW" || s.action === "INVESTIGATE"));
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -206,7 +206,7 @@ export default function Actions() {
           <BarChart2 className="h-3.5 w-3.5 text-blue-400" /> KPI Gap → Entry Points
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {(benchmarks ?? []).map((b) => (
+          {Array.isArray(benchmarks) ? benchmarks : [].map((b) => (
             <Card key={b.id} className="border border-border hover:border-primary/40 transition-all cursor-pointer group">
               <CardContent className="pt-4 space-y-2">
                 <div className="text-xs font-mono text-muted-foreground">{b.functionTag?.replace(/_/g, " ")}</div>
