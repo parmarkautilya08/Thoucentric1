@@ -14,6 +14,7 @@ import Signals from "@/pages/signals";
 import Benchmarks from "@/pages/benchmarks";
 import Playbooks from "@/pages/playbooks";
 import Actions from "@/pages/actions";
+import BattleCards from "@/pages/battle-cards";
 import Ask from "@/pages/ask";
 import Timeline from "@/pages/timeline";
 import Feeds from "@/pages/feeds";
@@ -42,6 +43,7 @@ function Router() {
         <Route path="/benchmarks" component={Benchmarks} />
         <Route path="/playbooks" component={Playbooks} />
         <Route path="/actions" component={Actions} />
+        <Route path="/battle-cards" component={BattleCards} />
         <Route path="/ask" component={Ask} />
         <Route path="/feeds" component={Feeds} />
         <Route path="/meeting-prep" component={MeetingPrep} />

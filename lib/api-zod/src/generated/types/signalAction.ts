@@ -9,9 +9,8 @@
 export type SignalAction = (typeof SignalAction)[keyof typeof SignalAction];
 
 export const SignalAction = {
-  UPDATE_CARD: "UPDATE_CARD",
-  SHEI_CANDIDATE: "SHEI_CANDIDATE",
-  DISRUPTION_BRIEF: "DISRUPTION_BRIEF",
+  ACT_NOW: "ACT_NOW",
+  INVESTIGATE: "INVESTIGATE",
   MONITOR: "MONITOR",
   NO_ACTION: "NO_ACTION",
 } as const;

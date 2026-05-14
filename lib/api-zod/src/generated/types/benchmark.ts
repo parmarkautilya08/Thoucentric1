@@ -22,6 +22,7 @@ export interface Benchmark {
   whyItMatters?: string;
   consultingAngle?: string;
   improvementLevers?: string;
+  calculationLogic?: string;
   version: string;
   createdAt: string;
   updatedAt: string;

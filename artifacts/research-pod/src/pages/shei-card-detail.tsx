@@ -50,7 +50,7 @@ export default function SheiCardDetail() {
   const signalItems = card?.signalCluster?.split(";").map((s: string) => s.trim()).filter(Boolean) ?? [];
 
   const linkedBenchmarks = (allBenchmarks ?? []).filter((b) =>
-    kpiLinks.some((kpi) =>
+    kpiLinks.some((kpi: any) =>
       b.kpiName?.toLowerCase().includes(kpi.toLowerCase().split(":")[0].trim().toLowerCase()) ||
       kpi.toLowerCase().includes(b.kpiName?.toLowerCase() ?? "")
     )
@@ -80,6 +80,48 @@ Please address:
 
     sessionStorage.setItem("rp_ask_prefill", prompt);
     navigate("/ask");
+  }
+
+  function handleGenerateBrief() {
+     if (!card) return;
+     const prompt = `Generate a 1-page EXECUTIVE BRIEF for a Thoucentric Director to present to an FMCG CXO.
+Base it on this SHEI card: "${card.title}"
+
+CONTEXT:
+${card.signal}
+
+HYPOTHESIS:
+${card.hypothesis}
+
+IMPLICATIONS:
+${card.clientImplication}
+
+Structure the brief with:
+1. **The 'So What'** (The immediate strategic threat/opportunity)
+2. **Quantified Impact** (Use financial figures from the card)
+3. **Thoucentric's Unique Point of View**
+4. **Immediate Next Steps** (Engagement proposal)`;
+
+     sessionStorage.setItem("rp_ask_prefill", prompt);
+     navigate("/ask");
+  }
+
+  function handleProposalStarter() {
+     if (!card) return;
+     const prompt = `Generate a CONSULTING PROPOSAL STARTER (SOW outline) for Thoucentric.
+Focus on solving the problem in SHEI card: "${card.title}"
+
+Goal: Convert this insight into a 12-week diagnostic or 6-month transformation engagement.
+
+Include:
+1. **Context & Problem Statement**
+2. **Project Objectives**
+3. **High-level Approach (3-4 phases)**
+4. **Estimated Value Creation**
+5. **Why Thoucentric?**`;
+
+     sessionStorage.setItem("rp_ask_prefill", prompt);
+     navigate("/ask");
   }
 
   if (isLoading)
@@ -144,12 +186,26 @@ Please address:
               )}
             </div>
           </div>
-          <button
-            onClick={handleAskAI}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/30 text-xs font-medium hover:bg-primary/20 transition-all shrink-0"
-          >
-            <Bot className="h-3.5 w-3.5" /> Analyze with AI
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleGenerateBrief}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-medium hover:bg-emerald-500/20 transition-all shrink-0"
+            >
+              <TrendingUp className="h-3.5 w-3.5" /> Executive Brief
+            </button>
+            <button
+              onClick={handleProposalStarter}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-medium hover:bg-amber-500/20 transition-all shrink-0"
+            >
+              <MessageSquare className="h-3.5 w-3.5" /> Proposal Starter
+            </button>
+            <button
+              onClick={handleAskAI}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/30 text-xs font-medium hover:bg-primary/20 transition-all shrink-0"
+            >
+              <Bot className="h-3.5 w-3.5" /> Analyze with AI
+            </button>
+          </div>
         </div>
       </div>
 
@@ -239,7 +295,7 @@ Please address:
           </CardHeader>
           <CardContent>
             <div className="space-y-1.5">
-              {kpiLinks.map((k, i) => (
+              {kpiLinks.map((k: any, i: number) => (
                 <div key={i} className="flex items-start gap-2 text-sm">
                   <span className="text-violet-400 shrink-0 font-mono">•</span>
                   <span className="leading-snug flex-1">{k}</span>
@@ -279,7 +335,7 @@ Please address:
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {signalItems.map((s, i) => (
+              {signalItems.map((s: any, i: number) => (
                 <Badge key={i} variant="outline" className="text-xs">
                   {s}
                 </Badge>

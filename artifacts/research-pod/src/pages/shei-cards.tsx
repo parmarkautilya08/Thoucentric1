@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Layers, ChevronRight, TrendingUp, DollarSign, Clock } from "lucide-react";
+import { Layers, ChevronRight, TrendingUp, DollarSign, Clock, TrendingDown, Minus } from "lucide-react";
 
 const statusColor = (status?: string | null) => {
   switch (status) {
@@ -131,6 +131,18 @@ export default function SheiCards() {
                       <CardTitle className="text-base font-semibold leading-snug group-hover:text-primary transition-colors">
                         {card.title}
                       </CardTitle>
+                      {(() => {
+                        const isImproving = card.trajectoryContext?.toLowerCase().includes("improving");
+                        const isDeteriorating = card.trajectoryContext?.toLowerCase().includes("deteriorating");
+                        const Icon = isImproving ? TrendingUp : isDeteriorating ? TrendingDown : Minus;
+                        const color = isImproving ? 'text-emerald-400' : isDeteriorating ? 'text-red-400' : 'text-blue-400';
+                        return (
+                          <div className={`flex items-center gap-1 mt-1 text-[10px] font-mono font-bold ${color} uppercase`}>
+                            <Icon className="h-3 w-3" />
+                            Trajectory: {isImproving ? "Improving" : isDeteriorating ? "Deteriorating" : "Stable"}
+                          </div>
+                        );
+                      })()}
                     </div>
                     <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-1" />
                   </div>

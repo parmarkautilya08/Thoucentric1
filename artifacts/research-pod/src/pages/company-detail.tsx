@@ -58,7 +58,7 @@ export default function CompanyDetail() {
     });
   }, [allBenchmarks, company]);
 
-  function getCompanyBenchmarkLine(benchmark: Record<string, unknown>): string | null {
+  function getCompanyBenchmarkLine(benchmark: any): string | null {
     if (!benchmark.companyExamples || !company) return null;
     const lines = (benchmark.companyExamples as string).split("\n");
     return (
@@ -317,7 +317,7 @@ Please provide:
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
             {relevantBenchmarks.map((b) => {
-              const companyLine = getCompanyBenchmarkLine(b as Record<string, unknown>);
+              const companyLine = getCompanyBenchmarkLine(b as any);
               const isLaggard =
                 companyLine?.toLowerCase().includes("laggard") ||
                 companyLine?.toLowerCase().includes("below");

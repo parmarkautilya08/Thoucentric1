@@ -170,6 +170,10 @@ export interface SheiCard {
   financialImpact?: string;
   whyNow?: string;
   relatedCompanies?: string;
+  contradictions?: string;
+  kpiLinkage?: string;
+  signalCluster?: string;
+  trajectoryContext?: string;
   version: string;
   nextReview?: string;
   createdAt: string;
@@ -265,9 +269,8 @@ export const SignalStrength = {
 export type SignalAction = (typeof SignalAction)[keyof typeof SignalAction];
 
 export const SignalAction = {
-  UPDATE_CARD: "UPDATE_CARD",
-  SHEI_CANDIDATE: "SHEI_CANDIDATE",
-  DISRUPTION_BRIEF: "DISRUPTION_BRIEF",
+  ACT_NOW: "ACT_NOW",
+  INVESTIGATE: "INVESTIGATE",
   MONITOR: "MONITOR",
   NO_ACTION: "NO_ACTION",
 } as const;
@@ -302,6 +305,9 @@ export interface Signal {
   newsUrl?: string;
   quarter?: string;
   scRelevance?: string;
+  scope?: string;
+  pastState?: string;
+  trajectoryDir?: string;
   createdAt: string;
 }
 
@@ -317,6 +323,7 @@ export const CreateSignalBodyCategory = {
   REGULATORY: "REGULATORY",
   DISRUPTION: "DISRUPTION",
   MACRO: "MACRO",
+  PROCUREMENT: "PROCUREMENT",
 } as const;
 
 export type CreateSignalBodyStrength =
@@ -332,9 +339,8 @@ export type CreateSignalBodyAction =
   (typeof CreateSignalBodyAction)[keyof typeof CreateSignalBodyAction];
 
 export const CreateSignalBodyAction = {
-  UPDATE_CARD: "UPDATE_CARD",
-  SHEI_CANDIDATE: "SHEI_CANDIDATE",
-  DISRUPTION_BRIEF: "DISRUPTION_BRIEF",
+  ACT_NOW: "ACT_NOW",
+  INVESTIGATE: "INVESTIGATE",
   MONITOR: "MONITOR",
   NO_ACTION: "NO_ACTION",
 } as const;
@@ -365,6 +371,7 @@ export interface Benchmark {
   whyItMatters?: string;
   consultingAngle?: string;
   improvementLevers?: string;
+  calculationLogic?: string;
   version: string;
   createdAt: string;
   updatedAt: string;

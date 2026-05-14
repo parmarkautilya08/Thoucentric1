@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { usePresentationStore } from "@/lib/presentation-store";
 import {
   LayoutDashboard,
   Building2,
@@ -13,6 +14,7 @@ import {
   Clock,
   Rss,
   CalendarCheck,
+  Swords,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -37,6 +39,7 @@ const NAV_SECTIONS = [
     label: "Activation",
     items: [
       { href: "/actions", label: "Actions", icon: Zap },
+      { href: "/battle-cards", label: "Battle Cards", icon: Swords },
       { href: "/meeting-prep", label: "Meeting Prep", icon: CalendarCheck },
       { href: "/ask", label: "Ask Anything", icon: MessageCircle },
       { href: "/playbooks", label: "Playbooks", icon: BookOpen },
@@ -124,8 +127,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-background overflow-hidden">
       <aside className="w-64 border-r border-border bg-card flex flex-col">
         <div className="p-5 border-b border-border">
-          <h1 className="text-lg font-bold tracking-tight text-primary font-mono">INDUSTRY POD</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">Thoucentric FMCG Intelligence</p>
+          <h1 className="text-lg font-bold tracking-tight text-primary font-mono text-center mb-4">INDUSTRY POD</h1>
+
+          <div className="flex flex-col gap-2 mb-2">
+            <div className="flex items-center justify-between px-2 py-1.5 bg-muted/50 rounded-lg border border-border">
+              <span className="text-[10px] font-bold font-mono text-muted-foreground uppercase">Executive View</span>
+              <button
+                onClick={() => usePresentationStore.getState().toggleExecutiveView()}
+                className={`w-8 h-4 rounded-full transition-colors relative ${usePresentationStore(s => s.isExecutiveView) ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+              >
+                <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${usePresentationStore(s => s.isExecutiveView) ? 'left-4.5' : 'left-0.5'}`} />
+              </button>
+            </div>
+          </div>
         </div>
 
         <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
