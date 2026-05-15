@@ -36,17 +36,21 @@ const functionMap: Record<string, string> = {
 };
 
 export default function Actions() {
-  const { data: sheiCards, isLoading: sheiLoading } = useListSheiCards();
-  const { data: signals, isLoading: signalsLoading } = useListSignals();
-  const { data: benchmarks } = useListBenchmarks();
+  const { data: sheiCardsData, isLoading: sheiLoading } = useListSheiCards();
+  const { data: signalsData, isLoading: signalsLoading } = useListSignals();
+  const { data: benchmarksData } = useListBenchmarks();
+
+  const sheiCards = Array.isArray(sheiCardsData) ? sheiCardsData : [];
+  const signals = Array.isArray(signalsData) ? signalsData : [];
+  const benchmarks = Array.isArray(benchmarksData) ? benchmarksData : [];
 
   const isLoading = sheiLoading || signalsLoading;
 
-  const sortedCards = [...Array.isArray(sheiCards) ? sheiCards : []].sort(
+  const sortedCards = [...sheiCards].sort(
     (a, b) => (urgencyRank[a.urgency ?? ""] ?? 99) - (urgencyRank[b.urgency ?? ""] ?? 99)
   );
 
-  const highSignals = Array.isArray(signals) ? signals : [].filter((s) => s.strength === "HIGH" && (s.action === "ACT_NOW" || s.action === "INVESTIGATE"));
+  const highSignals = signals.filter((s) => s.strength === "HIGH" && (s.action === "ACT_NOW" || s.action === "INVESTIGATE"));
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -154,7 +158,7 @@ export default function Actions() {
                     <div className="flex items-center gap-2 pt-1 border-t border-border">
                       <span className="text-xs text-muted-foreground">Target accounts:</span>
                       <div className="flex flex-wrap gap-1.5">
-                        {card.relatedCompanies.split(",").map((c) => (
+                        {(card.relatedCompanies || "").split(",").map((c) => (
                           <Badge key={c.trim()} variant="outline" className="text-xs">{c.trim()}</Badge>
                         ))}
                       </div>
@@ -206,7 +210,7 @@ export default function Actions() {
           <BarChart2 className="h-3.5 w-3.5 text-blue-400" /> KPI Gap → Entry Points
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {Array.isArray(benchmarks) ? benchmarks : [].map((b) => (
+          {benchmarks.map((b) => (
             <Card key={b.id} className="border border-border hover:border-primary/40 transition-all cursor-pointer group">
               <CardContent className="pt-4 space-y-2">
                 <div className="text-xs font-mono text-muted-foreground">{b.functionTag?.replace(/_/g, " ")}</div>

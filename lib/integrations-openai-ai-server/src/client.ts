@@ -8,12 +8,10 @@ const baseURL =
   "https://api.openai.com/v1";
 
 if (!apiKey) {
-  throw new Error(
-    "AI_INTEGRATIONS_OPENAI_API_KEY or OPENAI_API_KEY must be set.",
-  );
+  console.warn("WARNING: AI_INTEGRATIONS_OPENAI_API_KEY or OPENAI_API_KEY not set. AI features will fail.");
 }
 
-export const openai = new OpenAI({
+export const openai = apiKey ? new OpenAI({
   apiKey,
   baseURL,
-});
+}) : null as unknown as OpenAI;

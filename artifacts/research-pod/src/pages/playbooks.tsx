@@ -168,7 +168,7 @@ function PlaybookCard({ section }: { section: any }) {
 export default function Playbooks() {
   const { data: playbooks, isLoading } = useListPlaybooks();
 
-  const grouped = (playbooks ?? []).reduce<Record<string, typeof playbooks>>((acc, s) => {
+  const grouped = (Array.isArray(playbooks) ? playbooks : []).reduce<Record<string, typeof playbooks>>((acc, s) => {
     const key = s.functionTag || "Other";
     if (!acc[key]) acc[key] = [];
     acc[key]!.push(s);
@@ -198,7 +198,7 @@ export default function Playbooks() {
                 <BookOpen className="h-3.5 w-3.5" /> {FUNCTION_LABELS[funcTag] || funcTag}
               </h2>
               <div className="space-y-3">
-                {(items ?? []).map((section) => (
+                {(Array.isArray(items) ? items : []).map((section) => (
                   <PlaybookCard key={section.id} section={section} />
                 ))}
               </div>

@@ -19,6 +19,7 @@ import Ask from "@/pages/ask";
 import Timeline from "@/pages/timeline";
 import Feeds from "@/pages/feeds";
 import MeetingPrep from "@/pages/meeting-prep";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Layout>
+      <ErrorBoundary>
       <Switch>
         <Route path="/" component={Dashboard} />
         <Route path="/companies" component={Companies} />
@@ -49,6 +51,7 @@ function Router() {
         <Route path="/meeting-prep" component={MeetingPrep} />
         <Route component={NotFound} />
       </Switch>
+      </ErrorBoundary>
     </Layout>
   );
 }

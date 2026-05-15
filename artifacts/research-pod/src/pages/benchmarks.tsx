@@ -220,9 +220,9 @@ export default function Benchmarks() {
   const [selected, setSelected] = useState<any>(null);
   const { data: benchmarks, isLoading } = useListBenchmarks();
 
-  const categories = [...new Set((benchmarks ?? []).map((b) => b.functionTag).filter(Boolean))];
+  const categories = [...new Set((Array.isArray(benchmarks) ? benchmarks : []).map((b) => b.functionTag).filter(Boolean))];
 
-  const filtered = (benchmarks ?? []).filter((b) =>
+  const filtered = (Array.isArray(benchmarks) ? benchmarks : []).filter((b) =>
     categoryFilter === "all" || b.functionTag === categoryFilter
   );
 

@@ -50,7 +50,7 @@ export default function SheiCards() {
 
   const { data: cards, isLoading } = useListSheiCards();
 
-  const filtered = (cards ?? []).filter((c) => {
+  const filtered = (Array.isArray(cards) ? cards : []).filter((c) => {
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     const matchUrgency = urgencyFilter === "all" || c.urgency === urgencyFilter;
     const matchFunc = functionFilter === "all" || c.functionTag === functionFilter;

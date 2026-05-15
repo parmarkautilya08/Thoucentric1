@@ -21,7 +21,7 @@ export default function Companies() {
 
   const { data: companies, isLoading } = useListCompanies();
 
-  const filtered = (companies ?? []).filter((c) => {
+  const filtered = (Array.isArray(companies) ? companies : []).filter((c) => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.fullName.toLowerCase().includes(search.toLowerCase());
     const matchTier = tierFilter === "all" || String(c.tier) === tierFilter;

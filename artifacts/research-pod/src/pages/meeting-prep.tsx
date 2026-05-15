@@ -26,22 +26,26 @@ export default function MeetingPrep() {
   const [generating, setGenerating] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  const { data: companies } = useListCompanies();
-  const { data: sheiCards } = useListSheiCards();
-  const { data: signals } = useListSignals();
+  const { data: companiesData } = useListCompanies();
+  const { data: sheiCardsData } = useListSheiCards();
+  const { data: signalsData } = useListSignals();
 
-  const selectedCompany = Array.isArray(companies) ? companies : [].find((c) => c.name === company);
+  const companies = Array.isArray(companiesData) ? companiesData : [];
+  const sheiCards = Array.isArray(sheiCardsData) ? sheiCardsData : [];
+  const signals = Array.isArray(signalsData) ? signalsData : [];
 
-  const linkedShei = Array.isArray(sheiCards) ? sheiCards : [].filter(
+  const selectedCompany = companies.find((c) => c.name === company);
+
+  const linkedShei = sheiCards.filter(
     (s) =>
       selectedCompany &&
-      s.relatedCompanies?.toLowerCase().includes(selectedCompany.name.toLowerCase())
+      s.relatedCompanies?.toLowerCase()?.includes(selectedCompany.name.toLowerCase())
   );
 
-  const linkedSignals = Array.isArray(signals) ? signals : [].filter(
+  const linkedSignals = signals.filter(
     (s) =>
       selectedCompany &&
-      (s.companyName?.toLowerCase().includes(selectedCompany.name.toLowerCase()) ||
+      (s.companyName?.toLowerCase()?.includes(selectedCompany.name.toLowerCase()) ||
         s.companyName === "All FMCG")
   );
 
@@ -209,7 +213,7 @@ Be specific, concise, and use the intelligence data above. Avoid generic stateme
                   <SelectValue placeholder="Select company..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-64 overflow-y-auto">
-                  {Array.isArray(companies) ? companies : [].map((c) => (
+                  {companies.map((c) => (
                     <SelectItem key={c.name} value={c.name}>
                       {c.name} — {c.fullName}
                     </SelectItem>
