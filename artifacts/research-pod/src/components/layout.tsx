@@ -49,12 +49,20 @@ const NAV_SECTIONS = [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const { isExecutiveView, toggleExecutiveView } = usePresentationStore();
   const [refreshing, setRefreshing] = useState(false);
   const [refreshStatus, setRefreshStatus] = useState<"idle" | "ok" | "error">("idle");
-  const [actionsNew, setActionsNew] = useState(() => !localStorage.getItem("rp_actions_seen"));
-  const [meetingPrepNew, setMeetingPrepNew] = useState(
-    () => !localStorage.getItem("rp_meeting_prep_seen")
-  );
+  const [actionsNew, setActionsNew] = useState(false);
+  const [meetingPrepNew, setMeetingPrepNew] = useState(false);
+
+  useEffect(() => {
+    try {
+      setActionsNew(!localStorage.getItem("rp_actions_seen"));
+      setMeetingPrepNew(!localStorage.getItem("rp_meeting_prep_seen"));
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     if (location === "/actions" && actionsNew) {
@@ -133,10 +141,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center justify-between px-2 py-1.5 bg-muted/50 rounded-lg border border-border">
               <span className="text-[10px] font-bold font-mono text-muted-foreground uppercase">Executive View</span>
               <button
-                onClick={() => usePresentationStore.getState().toggleExecutiveView()}
-                className={`w-8 h-4 rounded-full transition-colors relative ${usePresentationStore(s => s.isExecutiveView) ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+                onClick={() => toggleExecutiveView()}
+                className={`w-8 h-4 rounded-full transition-colors relative ${isExecutiveView ? 'bg-primary' : 'bg-muted-foreground/30'}`}
               >
-                <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${usePresentationStore(s => s.isExecutiveView) ? 'left-4.5' : 'left-0.5'}`} />
+                <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${isExecutiveView ? 'left-4.5' : 'left-0.5'}`} />
               </button>
             </div>
           </div>

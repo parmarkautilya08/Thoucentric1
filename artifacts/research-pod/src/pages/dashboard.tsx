@@ -22,12 +22,16 @@ const strengthColor = (s?: string) => {
 };
 
 export default function Dashboard() {
+  const isExecutive = usePresentationStore(s => s.isExecutiveView);
   const { data: summary, isLoading } = useGetDashboardSummary();
-  const { data: signals } = useListSignals();
-  const { data: sheiCards } = useListSheiCards();
+  const { data: signalsData } = useListSignals();
+  const { data: sheiCardsData } = useListSheiCards();
 
-  const recentSignals = (signals ?? []).slice(0, 8);
-  const urgentCards = (sheiCards ?? []).filter((c) => c.urgency === "IMMEDIATE" || c.status === "ACTIVE");
+  const signals = Array.isArray(signalsData) ? signalsData : [];
+  const sheiCards = Array.isArray(sheiCardsData) ? sheiCardsData : [];
+
+  const recentSignals = signals.slice(0, 8);
+  const urgentCards = sheiCards.filter((c) => c.urgency === "IMMEDIATE" || c.status === "ACTIVE");
 
   if (isLoading) {
     return (
@@ -41,8 +45,6 @@ export default function Dashboard() {
       </div>
     );
   }
-
-  const isExecutive = usePresentationStore(s => s.isExecutiveView);
 
   if (isExecutive) {
     return (

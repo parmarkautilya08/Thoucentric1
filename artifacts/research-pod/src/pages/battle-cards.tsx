@@ -23,8 +23,8 @@ export default function BattleCards() {
     }
   };
 
-  const compA = useMemo(() => companies?.find(c => c.id === selectedIds[0]), [companies, selectedIds]);
-  const compB = useMemo(() => companies?.find(c => c.id === selectedIds[1]), [companies, selectedIds]);
+  const compA = useMemo(() => Array.isArray(companies) ? companies.find : [].find(c => c.id === selectedIds[0]), [companies, selectedIds]);
+  const compB = useMemo(() => Array.isArray(companies) ? companies.find : [].find(c => c.id === selectedIds[1]), [companies, selectedIds]);
 
   const isLoading = companiesLoading;
 
@@ -47,7 +47,7 @@ export default function BattleCards() {
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-xl" />)
         ) : (
-          companies?.map((company) => (
+          Array.isArray(companies) ? companies.map : [].map((company) => (
             <button
               key={company.id}
               onClick={() => toggleCompany(company.id)}
