@@ -43,7 +43,7 @@ export default function Timeline() {
   const [filterCategory, setFilterCategory] = useState("all");
   const { data: signals, isLoading } = useListSignals();
 
-  const filtered = Array.isArray(signals) ? signals : []
+  const filtered = (Array.isArray(signals) ? signals : [])
     .filter((s) => filterStrength === "all" || s.strength === filterStrength)
     .filter((s) => filterCategory === "all" || s.category === filterCategory)
     .sort((a, b) => {

@@ -49,7 +49,7 @@ export default function SheiCardDetail() {
   const kpiLinks = card?.kpiLinkage?.split(";").map((k: string) => k.trim()).filter(Boolean) ?? [];
   const signalItems = card?.signalCluster?.split(";").map((s: string) => s.trim()).filter(Boolean) ?? [];
 
-  const linkedBenchmarks = (allBenchmarks ?? []).filter((b) =>
+  const linkedBenchmarks = (Array.isArray(allBenchmarks) ? allBenchmarks : []).filter((b) =>
     kpiLinks.some((kpi: any) =>
       b.kpiName?.toLowerCase().includes(kpi.toLowerCase().split(":")[0].trim().toLowerCase()) ||
       kpi.toLowerCase().includes(b.kpiName?.toLowerCase() ?? "")

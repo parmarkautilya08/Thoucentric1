@@ -136,7 +136,7 @@ export default function Signals() {
 
   const { data: signals, isLoading } = useListSignals();
 
-  const filtered = Array.isArray(signals) ? signals : [].filter((s) => {
+  const filtered = (Array.isArray(signals) ? signals : []).filter((s) => {
     const matchStrength = strengthFilter === "all" || s.strength === strengthFilter;
     const matchCat = categoryFilter === "all" || s.category === categoryFilter;
     const matchScope = scopeFilter === "all" || s.scope === scopeFilter;

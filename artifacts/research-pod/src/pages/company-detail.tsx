@@ -32,7 +32,7 @@ export default function CompanyDetail() {
 
   const linkedShei = useMemo(
     () =>
-      (allShei ?? []).filter((s) =>
+      (Array.isArray(allShei) ? allShei : []).filter((s) =>
         s.relatedCompanies?.toLowerCase().includes((company?.name ?? "").toLowerCase())
       ),
     [allShei, company]
@@ -40,7 +40,7 @@ export default function CompanyDetail() {
 
   const linkedSignals = useMemo(
     () =>
-      (allSignals ?? []).filter(
+      (Array.isArray(allSignals) ? allSignals : []).filter(
         (s) =>
           s.companyName?.toLowerCase().includes((company?.name ?? "").toLowerCase()) ||
           s.companyName === "All FMCG"

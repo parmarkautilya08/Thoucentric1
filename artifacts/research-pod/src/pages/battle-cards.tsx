@@ -5,13 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Swords, TrendingUp, AlertTriangle, CheckCircle2, XCircle,
-  Target, Zap, ArrowRight, BarChart2, ShieldAlert
+  Target, Zap, ArrowRight, BarChart2, ShieldAlert, AlertCircle
 } from "lucide-react";
 
 export default function BattleCards() {
-  const { data: companies, isLoading: companiesLoading } = useListCompanies();
-  const { data: benchmarks } = useListBenchmarks();
+  const { data: companiesData, isLoading: companiesLoading, error: companiesError } = useListCompanies();
+  const { data: benchmarksData } = useListBenchmarks();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  const companies = Array.isArray(companiesData) ? companiesData : [];
+  const benchmarks = Array.isArray(benchmarksData) ? benchmarksData : [];
 
   const toggleCompany = (id: number) => {
     if (selectedIds.includes(id)) {
@@ -23,8 +26,8 @@ export default function BattleCards() {
     }
   };
 
-  const compA = useMemo(() => Array.isArray(companies) ? companies.find : [].find(c => c.id === selectedIds[0]), [companies, selectedIds]);
-  const compB = useMemo(() => Array.isArray(companies) ? companies.find : [].find(c => c.id === selectedIds[1]), [companies, selectedIds]);
+  const compA = useMemo(() => companies.find(c => c.id === selectedIds[0]), [companies, selectedIds]);
+  const compB = useMemo(() => companies.find(c => c.id === selectedIds[1]), [companies, selectedIds]);
 
   const isLoading = companiesLoading;
 
@@ -42,30 +45,47 @@ export default function BattleCards() {
         </Badge>
       </div>
 
+      {/* Error State */}
+      {companiesError && (
+        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-sm">
+          <AlertCircle className="h-5 w-5 shrink-0" />
+          <div>
+            <p className="font-bold">Intelligence Feed Interrupted</p>
+            <p className="opacity-80">Unable to connect to the research database. Please ensure the backend and database are running.</p>
+          </div>
+        </div>
+      )}
+
       {/* Selection Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-xl" />)
         ) : (
-          Array.isArray(companies) ? companies.map : [].map((company) => (
-            <button
-              key={company.id}
-              onClick={() => toggleCompany(company.id)}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                selectedIds.includes(company.id)
-                  ? "bg-primary/10 border-primary shadow-[0_0_15px_rgba(var(--primary),0.1)]"
-                  : "bg-card border-border hover:border-primary/40"
-              }`}
-            >
-              <div className="text-xs font-mono text-muted-foreground mb-1">{company.name}</div>
-              <div className="text-sm font-bold truncate">{company.fullName}</div>
-              {selectedIds.includes(company.id) && (
-                <div className="mt-1.5 flex justify-end">
-                  <Badge className="bg-primary h-4 px-1.5 text-[10px]">SELECTED</Badge>
-                </div>
-              )}
-            </button>
-          ))
+          companies.length > 0 ? (
+            companies.map((company) => (
+              <button
+                key={company.id}
+                onClick={() => toggleCompany(company.id)}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                  selectedIds.includes(company.id)
+                    ? "bg-primary/10 border-primary shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+                    : "bg-card border-border hover:border-primary/40"
+                }`}
+              >
+                <div className="text-xs font-mono text-muted-foreground mb-1">{company.name || "N/A"}</div>
+                <div className="text-sm font-bold truncate">{company.fullName || "N/A"}</div>
+                {selectedIds.includes(company.id) && (
+                  <div className="mt-1.5 flex justify-end">
+                    <Badge className="bg-primary h-4 px-1.5 text-[10px]">SELECTED</Badge>
+                  </div>
+                )}
+              </button>
+            ))
+          ) : !companiesLoading && !companiesError && (
+            <div className="col-span-full py-12 text-center border-2 border-dashed border-border rounded-2xl text-muted-foreground text-sm">
+              No companies found in research database.
+            </div>
+          )
         )}
       </div>
 
@@ -78,13 +98,13 @@ export default function BattleCards() {
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <Badge variant="outline" className="mb-2">TIER {comp.tier}</Badge>
-                      <CardTitle className="text-2xl font-bold">{comp.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{comp.fullName}</p>
+                      <Badge variant="outline" className="mb-2">TIER {comp.tier || "N/A"}</Badge>
+                      <CardTitle className="text-2xl font-bold">{comp.name || "N/A"}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{comp.fullName || "N/A"}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-mono font-bold text-primary">{comp.revenue}</div>
-                      <div className="text-xs text-muted-foreground">EBITDA: {comp.ebitdaMargin}</div>
+                      <div className="text-sm font-mono font-bold text-primary">{comp.revenue || "N/A"}</div>
+                      <div className="text-xs text-muted-foreground">EBITDA: {comp.ebitdaMargin || "N/A"}</div>
                     </div>
                   </div>
                 </CardHeader>
@@ -92,7 +112,7 @@ export default function BattleCards() {
                   <div>
                     <div className="text-xs font-mono font-bold text-muted-foreground uppercase mb-2">Strategic Priorities</div>
                     <div className="flex flex-wrap gap-1.5">
-                      {comp.strategicPriorities?.split(",").map(p => (
+                      {(comp.strategicPriorities || "").split(",").map(p => p.trim() && (
                         <Badge key={p} variant="secondary" className="text-[10px] font-medium">{p.trim()}</Badge>
                       ))}
                     </div>
@@ -116,8 +136,8 @@ export default function BattleCards() {
                <Card key={attr.label} className="overflow-hidden">
                  <div className="bg-muted/50 px-4 py-2 text-xs font-bold font-mono border-b">{attr.label.toUpperCase()}</div>
                  <div className="grid grid-cols-2 divide-x border-border">
-                   <div className="p-4 text-sm leading-relaxed whitespace-pre-wrap">{compA[attr.field as keyof typeof compA]}</div>
-                   <div className="p-4 text-sm leading-relaxed whitespace-pre-wrap">{compB[attr.field as keyof typeof compB]}</div>
+                   <div className="p-4 text-sm leading-relaxed whitespace-pre-wrap">{String(compA?.[attr.field as keyof typeof compA] || "N/A")}</div>
+                   <div className="p-4 text-sm leading-relaxed whitespace-pre-wrap">{String(compB?.[attr.field as keyof typeof compB] || "N/A")}</div>
                  </div>
                </Card>
              ))}
@@ -132,8 +152,8 @@ export default function BattleCards() {
              <Card className="overflow-hidden border-amber-500/30">
                <div className="bg-amber-500/10 px-4 py-2 text-xs font-bold font-mono border-b border-amber-500/20 text-amber-500">QUICK TAKE / COMPETITIVE EDGE</div>
                <div className="grid grid-cols-2 divide-x border-border">
-                 <div className="p-4 text-sm font-medium italic">"{compA.quickTake}"</div>
-                 <div className="p-4 text-sm font-medium italic">"{compB.quickTake}"</div>
+                 <div className="p-4 text-sm font-medium italic">"{compA?.quickTake || "N/A"}"</div>
+                 <div className="p-4 text-sm font-medium italic">"{compB?.quickTake || "N/A"}"</div>
                </div>
              </Card>
 
@@ -141,7 +161,7 @@ export default function BattleCards() {
                <div className="bg-red-500/10 px-4 py-2 text-xs font-bold font-mono border-b border-red-500/20 text-red-400">WHERE THEY FAIL (CONSULTING HOOK)</div>
                <div className="grid grid-cols-2 divide-x border-border">
                  <div className="p-4 text-sm space-y-2">
-                   {compA.openProblems?.split(".").map((p, i) => p.trim() && (
+                   {(compA.openProblems || "").split(".").map((p, i) => p.trim() && (
                      <div key={i} className="flex gap-2">
                        <XCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
                        <span>{p.trim()}</span>
@@ -149,7 +169,7 @@ export default function BattleCards() {
                    ))}
                  </div>
                  <div className="p-4 text-sm space-y-2">
-                   {compB.openProblems?.split(".").map((p, i) => p.trim() && (
+                   {(compB.openProblems || "").split(".").map((p, i) => p.trim() && (
                      <div key={i} className="flex gap-2">
                        <XCircle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
                        <span>{p.trim()}</span>
@@ -165,12 +185,12 @@ export default function BattleCards() {
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-muted-foreground uppercase">Pitch Strategy for {compA.name}</p>
-                    <p className="text-sm font-medium leading-relaxed">Focus on {compA.openProblems?.split(".")[0]}. Align with their priority of {compA.strategicPriorities?.split(",")[0]}.</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase">Pitch Strategy for {compA.name || "Comp A"}</p>
+                    <p className="text-sm font-medium leading-relaxed">Focus on {(compA.openProblems || "").split(".")[0] || "core operational gaps"}. Align with their priority of {(compA.strategicPriorities || "").split(",")[0] || "growth"}.</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-muted-foreground uppercase">Pitch Strategy for {compB.name}</p>
-                    <p className="text-sm font-medium leading-relaxed">Leverage their {compB.scIntelligence?.split(".")[0].slice(0, 50)}... gap. Position against {compB.name}'s risk of {compB.openProblems?.split(".")[0]}.</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase">Pitch Strategy for {compB.name || "Comp B"}</p>
+                    <p className="text-sm font-medium leading-relaxed">Leverage their {(compB.scIntelligence || "").split(".")[0]?.slice(0, 50) || "supply chain"}... gap. Position against {compB.name}'s risk of {(compB.openProblems || "").split(".")[0] || "market volatility"}.</p>
                   </div>
                 </div>
              </div>
