@@ -3,5 +3,10 @@
   "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm --filter @workspace/research-pod build",
-  "outputDirectory": "artifacts/research-pod/dist/public"
+  "outputDirectory": "artifacts/research-pod/dist/public",
+  "functions": {
+    "api/[...path].ts": {
+      "maxDuration": 30
+    }
+  }
 }
