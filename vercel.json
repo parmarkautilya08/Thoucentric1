@@ -2,10 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter @workspace/research-pod build",
+  "buildCommand": "pnpm --filter @workspace/research-pod build && pnpm --filter @workspace/api-server build",
   "outputDirectory": "artifacts/research-pod/dist/public",
   "functions": {
-    "api/[...path].ts": {
+    "api/[...path].js": {
       "maxDuration": 30
     }
   }
